@@ -1,0 +1,33 @@
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { FAQS } from "@/lib/site";
+
+export function FAQ() {
+  return (
+    <section id="faq" className="bg-secondary/40">
+      <div className="container-x py-24 md:py-32">
+        <div className="grid gap-12 md:grid-cols-[1fr_1.5fr]">
+          <div>
+            <span className="eyebrow">FAQ</span>
+            <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">Questions, answered.</h2>
+            <p className="mt-4 text-muted-foreground">
+              Can't find what you're looking for? Reach our team at{" "}
+              <a href="mailto:hello@accuratehomereport.com" className="text-ink underline underline-offset-4">
+                hello@accuratehomereport.com
+              </a>.
+            </p>
+          </div>
+          <Accordion type="single" collapsible className="divide-y rounded-2xl border border-border bg-card px-6">
+            {FAQS.map((f, idx) => (
+              <AccordionItem key={idx} value={`f-${idx}`} className="border-none py-1">
+                <AccordionTrigger className="text-left font-display text-lg text-ink hover:no-underline">
+                  {f.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </div>
+    </section>
+  );
+}
