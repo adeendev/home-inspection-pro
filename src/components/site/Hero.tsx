@@ -12,6 +12,7 @@ export function Hero() {
           alt="Modern luxury home at golden hour"
           width={1920}
           height={1280}
+          loading="lazy"
           className="h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-ink/85 via-ink/70 to-ink/95" />

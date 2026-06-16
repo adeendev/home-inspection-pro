@@ -14,6 +14,7 @@ import { Route as SampleReportRouteImport } from './routes/sample-report'
 import { Route as OrderRouteImport } from './routes/order'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as OrderStatusRouteImport } from './routes/order.$status'
+import { Route as ApiWebhookRouteImport } from './routes/api/webhook'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -40,12 +41,18 @@ const OrderStatusRoute = OrderStatusRouteImport.update({
   path: '/$status',
   getParentRoute: () => OrderRoute,
 } as any)
+const ApiWebhookRoute = ApiWebhookRouteImport.update({
+  id: '/api/webhook',
+  path: '/api/webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/order': typeof OrderRouteWithChildren
   '/sample-report': typeof SampleReportRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/webhook': typeof ApiWebhookRoute
   '/order/$status': typeof OrderStatusRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/order': typeof OrderRouteWithChildren
   '/sample-report': typeof SampleReportRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/webhook': typeof ApiWebhookRoute
   '/order/$status': typeof OrderStatusRoute
 }
 export interface FileRoutesById {
@@ -61,6 +69,7 @@ export interface FileRoutesById {
   '/order': typeof OrderRouteWithChildren
   '/sample-report': typeof SampleReportRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/api/webhook': typeof ApiWebhookRoute
   '/order/$status': typeof OrderStatusRoute
 }
 export interface FileRouteTypes {
@@ -70,15 +79,23 @@ export interface FileRouteTypes {
     | '/order'
     | '/sample-report'
     | '/sitemap.xml'
+    | '/api/webhook'
     | '/order/$status'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/order' | '/sample-report' | '/sitemap.xml' | '/order/$status'
+  to:
+    | '/'
+    | '/order'
+    | '/sample-report'
+    | '/sitemap.xml'
+    | '/api/webhook'
+    | '/order/$status'
   id:
     | '__root__'
     | '/'
     | '/order'
     | '/sample-report'
     | '/sitemap.xml'
+    | '/api/webhook'
     | '/order/$status'
   fileRoutesById: FileRoutesById
 }
@@ -87,6 +104,7 @@ export interface RootRouteChildren {
   OrderRoute: typeof OrderRouteWithChildren
   SampleReportRoute: typeof SampleReportRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  ApiWebhookRoute: typeof ApiWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -126,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderStatusRouteImport
       parentRoute: typeof OrderRoute
     }
+    '/api/webhook': {
+      id: '/api/webhook'
+      path: '/api/webhook'
+      fullPath: '/api/webhook'
+      preLoaderRoute: typeof ApiWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -144,7 +169,18 @@ const rootRouteChildren: RootRouteChildren = {
   OrderRoute: OrderRouteWithChildren,
   SampleReportRoute: SampleReportRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  ApiWebhookRoute: ApiWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

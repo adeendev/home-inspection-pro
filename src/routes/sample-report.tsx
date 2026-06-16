@@ -3,6 +3,7 @@ import { ArrowRight, FileDown, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/site/Header";
 import { SiteFooter } from "@/components/site/Footer";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/sample-report")({
   head: () => ({
@@ -48,10 +49,8 @@ function SamplePage() {
             structure used in our Basic, Premium, and Verified packages.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button asChild variant="brass" size="lg">
-              <a href="#" onClick={(e) => e.preventDefault()}>
-                <FileDown className="mr-1 h-4 w-4" /> Download sample PDF
-              </a>
+            <Button variant="brass" size="lg" onClick={() => toast("Sample PDF coming soon — we'll notify you.")}>
+              <FileDown className="mr-1 h-4 w-4" /> Download sample PDF
             </Button>
             <Button asChild variant="glass" size="lg">
               <Link to="/order">Order your report <ArrowRight className="ml-1 h-4 w-4" /></Link>

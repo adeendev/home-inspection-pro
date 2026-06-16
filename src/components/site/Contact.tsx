@@ -5,10 +5,34 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 import { SITE } from "@/lib/site";
+
+type ContactErrors = Partial<Record<"first" | "last" | "email" | "message", string>>;
+
+function validate(values: Record<string, string>): ContactErrors {
+  const errors: ContactErrors = {};
+  if (!values.first?.trim()) errors.first = "First name is required";
+  if (!values.last?.trim()) errors.last = "Last name is required";
+  if (!values.email?.trim()) {
+    errors.email = "Email is required";
+  } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
+    errors.email = "Enter a valid email address";
+  }
+  if (!values.message?.trim()) errors.message = "Message is required";
+  return errors;
+}
 
 export function Contact() {
   const [sending, setSending] = useState(false);
+  const [errors, setErrors] = useState<ContactErrors>({});
+  const [touched, setTouched] = useState<Set<string>>(new Set());
+
+  const handleBlur = (name: string, values: Record<string, string>) => {
+    setTouched((prev) => new Set(prev).add(name));
+    setErrors((prev) => ({ ...prev, ...validate(values) }));
+  };
+
   return (
     <section id="contact" className="container-x py-24 md:py-32">
       <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
@@ -40,35 +64,67 @@ export function Contact() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            const form = e.target as HTMLFormElement;
+            const data = new FormData(form);
+            const values = Object.fromEntries(data) as Record<string, string>;
+            const errs = validate(values);
+            setErrors(errs);
+            setTouched(new Set(["first", "last", "email", "message"]));
+            if (Object.keys(errs).length > 0) return;
+
             setSending(true);
-            setTimeout(() => {
-              setSending(false);
-              (e.target as HTMLFormElement).reset();
-              toast.success("Message received. We'll reply within one business day.");
-            }, 700);
+            // Will be replaced with actual API call
+            new Promise<void>((resolve) => setTimeout(resolve, 700))
+              .then(() => {
+                toast.success("Message received. We'll reply within one business day.");
+                form.reset();
+                setErrors({});
+                setTouched(new Set());
+              })
+              .catch(() => {
+                toast.error("Failed to send message. Please try again.");
+              })
+              .finally(() => setSending(false));
           }}
           className="rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-10"
         >
           <div className="grid gap-4 sm:grid-cols-2">
-            <div className="sm:col-span-1">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground">First name</label>
-              <Input required name="first" className="mt-2" />
-            </div>
-            <div className="sm:col-span-1">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground">Last name</label>
-              <Input required name="last" className="mt-2" />
-            </div>
-            <div className="sm:col-span-2">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground">Email</label>
-              <Input required type="email" name="email" className="mt-2" />
-            </div>
+            <FieldError
+              label="First name"
+              name="first"
+              error={touched.has("first") ? errors.first : undefined}
+              onBlur={handleBlur}
+            />
+            <FieldError
+              label="Last name"
+              name="last"
+              error={touched.has("last") ? errors.last : undefined}
+              onBlur={handleBlur}
+            />
+            <FieldError
+              label="Email"
+              name="email"
+              type="email"
+              className="sm:col-span-2"
+              error={touched.has("email") ? errors.email : undefined}
+              onBlur={handleBlur}
+            />
             <div className="sm:col-span-2">
               <label className="text-xs uppercase tracking-widest text-muted-foreground">Property address (optional)</label>
               <Input name="address" className="mt-2" />
             </div>
             <div className="sm:col-span-2">
               <label className="text-xs uppercase tracking-widest text-muted-foreground">How can we help?</label>
-              <Textarea required name="message" rows={4} className="mt-2" />
+              <Textarea
+                required
+                name="message"
+                rows={4}
+                className={cn("mt-2", touched.has("message") && errors.message && "border-destructive")}
+                onBlur={(e) => handleBlur("message", { message: e.target.value })}
+              />
+              {touched.has("message") && errors.message && (
+                <p className="mt-1 text-xs text-destructive">{errors.message}</p>
+              )}
             </div>
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
@@ -85,5 +141,35 @@ export function Contact() {
         </form>
       </div>
     </section>
+  );
+}
+
+function FieldError({
+  label,
+  name,
+  error,
+  type,
+  className,
+  onBlur,
+}: {
+  label: string;
+  name: string;
+  error?: string;
+  type?: string;
+  className?: string;
+  onBlur: (name: string, values: Record<string, string>) => void;
+}) {
+  return (
+    <div className={className}>
+      <label className="text-xs uppercase tracking-widest text-muted-foreground">{label}</label>
+      <Input
+        required
+        type={type ?? "text"}
+        name={name}
+        className={cn("mt-2", error && "border-destructive")}
+        onBlur={(e) => onBlur(name, { [name]: e.target.value })}
+      />
+      {error && <p className="mt-1 text-xs text-destructive">{error}</p>}
+    </div>
   );
 }
