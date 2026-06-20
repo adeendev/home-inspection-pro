@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { SITE } from "@/lib/site";
 
 export function SiteFooter() {
@@ -14,21 +14,37 @@ export function SiteFooter() {
               <span className="font-display text-lg text-cream">Accurate Home Report</span>
             </div>
             <p className="mt-4 max-w-md text-sm leading-relaxed text-cream/65">
-              A homeowner-verified property reporting service. Public records, third-party data, and your
-              disclosures—assembled by analysts into one professional report.
+              A homeowner-verified property reporting service. Public records, third-party data, and
+              your disclosures—assembled by analysts into one professional report.
             </p>
             <p className="mt-6 text-xs text-cream/55">
-              Not a home inspection, appraisal, or real estate brokerage. Reports do not replace licensed
-              professional advice.
+              Not a home inspection, appraisal, or real estate brokerage. Reports do not replace
+              licensed professional advice.
             </p>
           </div>
           <div>
             <h4 className="font-display text-sm text-cream">Service</h4>
             <ul className="mt-4 space-y-2.5 text-sm">
-              <li><a href="/#packages" className="hover:text-brass">Packages</a></li>
-              <li><a href="/#process" className="hover:text-brass">How it works</a></li>
-              <li><Link to="/sample-report" className="hover:text-brass">Sample report</Link></li>
-              <li><a href="/#faq" className="hover:text-brass">FAQ</a></li>
+              <li>
+                <a href="/#packages" className="hover:text-brass">
+                  Packages
+                </a>
+              </li>
+              <li>
+                <a href="/#process" className="hover:text-brass">
+                  How it works
+                </a>
+              </li>
+              <li>
+                <Link href="/sample-report" className="hover:text-brass">
+                  Sample report
+                </Link>
+              </li>
+              <li>
+                <a href="/#faq" className="hover:text-brass">
+                  FAQ
+                </a>
+              </li>
             </ul>
           </div>
           <div>
@@ -41,7 +57,9 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="mt-14 flex flex-col gap-3 border-t border-cream/15 pt-6 text-xs text-cream/55 md:flex-row md:items-center md:justify-between">
-          <p>© {new Date().getFullYear()} {SITE.name}. All rights reserved.</p>
+          <p>
+            © {new Date().getFullYear()} {SITE.name}. All rights reserved.
+          </p>
           <p>Privacy · Terms · Disclosures</p>
         </div>
       </div>

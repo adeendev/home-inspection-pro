@@ -1,5 +1,8 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -34,34 +37,83 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="container-x py-24 md:py-32">
+    <motion.section
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ duration: 0.6 }}
+      id="contact"
+      className="container-x py-24 md:py-32"
+    >
       <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
           <span className="eyebrow">Contact</span>
           <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
             Speak with a property analyst.
           </h2>
           <p className="mt-4 text-muted-foreground">
-            Have a question before ordering? Our team replies within one business day. For Verified package
-            scheduling, please mention your metro area.
+            Have a question before ordering? Our team replies within one business day. For Verified
+            package scheduling, please mention your metro area.
           </p>
           <ul className="mt-8 space-y-4 text-sm">
-            <li className="flex items-start gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream"><Phone className="h-4 w-4" /></span>
-              <div><p className="text-muted-foreground">Phone</p><p className="text-ink">{SITE.phone}</p></div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream"><Mail className="h-4 w-4" /></span>
-              <div><p className="text-muted-foreground">Email</p><p className="text-ink">{SITE.email}</p></div>
-            </li>
-            <li className="flex items-start gap-3">
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream"><MapPin className="h-4 w-4" /></span>
-              <div><p className="text-muted-foreground">Coverage</p><p className="text-ink">{SITE.address}</p></div>
-            </li>
+            <motion.li
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.1 }}
+              className="flex items-start gap-3"
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream">
+                <Phone className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-muted-foreground">Phone</p>
+                <p className="text-ink">{SITE.phone}</p>
+              </div>
+            </motion.li>
+            <motion.li
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.18 }}
+              className="flex items-start gap-3"
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream">
+                <Mail className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-muted-foreground">Email</p>
+                <p className="text-ink">{SITE.email}</p>
+              </div>
+            </motion.li>
+            <motion.li
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.26 }}
+              className="flex items-start gap-3"
+            >
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream">
+                <MapPin className="h-4 w-4" />
+              </span>
+              <div>
+                <p className="text-muted-foreground">Coverage</p>
+                <p className="text-ink">{SITE.address}</p>
+              </div>
+            </motion.li>
           </ul>
-        </div>
+        </motion.div>
 
-        <form
+        <motion.form
+          initial={{ opacity: 0, x: 30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
           onSubmit={(e) => {
             e.preventDefault();
             const form = e.target as HTMLFormElement;
@@ -110,16 +162,23 @@ export function Contact() {
               onBlur={handleBlur}
             />
             <div className="sm:col-span-2">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground">Property address (optional)</label>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground">
+                Property address (optional)
+              </label>
               <Input name="address" className="mt-2" />
             </div>
             <div className="sm:col-span-2">
-              <label className="text-xs uppercase tracking-widest text-muted-foreground">How can we help?</label>
+              <label className="text-xs uppercase tracking-widest text-muted-foreground">
+                How can we help?
+              </label>
               <Textarea
                 required
                 name="message"
                 rows={4}
-                className={cn("mt-2", touched.has("message") && errors.message && "border-destructive")}
+                className={cn(
+                  "mt-2",
+                  touched.has("message") && errors.message && "border-destructive",
+                )}
                 onBlur={(e) => handleBlur("message", { message: e.target.value })}
               />
               {touched.has("message") && errors.message && (
@@ -128,19 +187,23 @@ export function Contact() {
             </div>
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <p className="text-xs text-muted-foreground">By submitting, you agree to our privacy practices.</p>
+            <p className="text-xs text-muted-foreground">
+              By submitting, you agree to our privacy practices.
+            </p>
             <div className="flex gap-2">
               <Button asChild variant="ghost">
-                <Link to="/order">Skip — Order now <ArrowRight className="ml-1 h-4 w-4" /></Link>
+                <Link href="/order">
+                  Skip — Order now <ArrowRight className="ml-1 h-4 w-4" />
+                </Link>
               </Button>
               <Button type="submit" variant="primary" disabled={sending}>
                 {sending ? "Sending…" : "Send message"}
               </Button>
             </div>
           </div>
-        </form>
+        </motion.form>
       </div>
-    </section>
+    </motion.section>
   );
 }
 

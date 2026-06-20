@@ -1,5 +1,7 @@
-import { createFileRoute, Link, useParams, useSearch } from "@tanstack/react-router";
-import { z } from "zod";
+"use client";
+
+import Link from "next/link";
+import { useParams, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { CheckCircle2, XCircle, Clock3, ArrowRight, Mail, FileDown, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,66 +9,62 @@ import { SiteHeader } from "@/components/site/Header";
 import { SiteFooter } from "@/components/site/Footer";
 import { toast } from "sonner";
 
-const statusSearch = z.object({
-  package: z.string().optional(),
-  payment_intent: z.string().optional(),
-});
+const STATUSES = ["success", "pending", "failed"] as const;
 
-export const Route = createFileRoute("/order/$status")({
-  validateSearch: statusSearch,
-  head: ({ params }) => {
-    const t =
-      params.status === "success"
-        ? "Order Confirmed"
-        : params.status === "pending"
-          ? "Payment Pending"
-          : "Payment Failed";
-    return {
-      meta: [
-        { title: `${t} — Accurate Home Report` },
-        { name: "description", content: `${t} for your homeowner-verified property report.` },
-        { name: "robots", content: "noindex" },
-      ],
-    };
+const CONFIG: Record<
+  string,
+  {
+    icon: typeof CheckCircle2;
+    tone: string;
+    bg: string;
+    title: string;
+    sub: string;
+    cta: { label: string; to: string };
+  }
+> = {
+  success: {
+    icon: CheckCircle2,
+    tone: "text-emerald-500",
+    bg: "bg-emerald-500/10",
+    title: "Payment received. Your report is in production.",
+    sub: "We've sent a confirmation email with your order details and the link to your property questionnaire.",
+    cta: { label: "Open property questionnaire", to: "/order" },
   },
-  component: StatusPage,
-});
+  pending: {
+    icon: Clock3,
+    tone: "text-brass",
+    bg: "bg-brass/10",
+    title: "Payment processing.",
+    sub: "Your bank is reviewing the charge. You'll receive a confirmation email as soon as it clears—usually within a few minutes.",
+    cta: { label: "Return home", to: "/" },
+  },
+  failed: {
+    icon: XCircle,
+    tone: "text-destructive",
+    bg: "bg-destructive/10",
+    title: "Payment was not completed.",
+    sub: "Your card was not charged. Please try a different card or payment method.",
+    cta: { label: "Try payment again", to: "/order" },
+  },
+};
 
-function StatusPage() {
-  const { status } = useParams({ from: "/order/$status" });
-  const search = useSearch({ from: "/order/$status" });
+export default function StatusPage() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const status = params.status as string;
+  const paymentIntent = searchParams.get("payment_intent");
 
   useEffect(() => {
     if (status === "success") {
-      try { localStorage.removeItem("order-form-state"); } catch { /* ignore */ }
+      try {
+        localStorage.removeItem("order-form-state");
+      } catch {
+        /* ignore */
+      }
     }
   }, [status]);
-  const cfg = {
-    success: {
-      icon: CheckCircle2,
-      tone: "text-emerald-500",
-      bg: "bg-emerald-500/10",
-      title: "Payment received. Your report is in production.",
-      sub: "We've sent a confirmation email with your order details and the link to your property questionnaire.",
-      cta: { label: "Open property questionnaire", to: "/order" },
-    },
-    pending: {
-      icon: Clock3,
-      tone: "text-brass",
-      bg: "bg-brass/10",
-      title: "Payment processing.",
-      sub: "Your bank is reviewing the charge. You'll receive a confirmation email as soon as it clears—usually within a few minutes.",
-      cta: { label: "Return home", to: "/" },
-    },
-    failed: {
-      icon: XCircle,
-      tone: "text-destructive",
-      bg: "bg-destructive/10",
-      title: "Payment was not completed.",
-      sub: "Your card was not charged. Please try a different card or payment method.",
-      cta: { label: "Try payment again", to: "/order" },
-    },
-  }[status as "success" | "pending" | "failed"] ?? {
+
+  const cfg = CONFIG[status] ?? {
     icon: XCircle,
     tone: "text-destructive",
     bg: "bg-destructive/10",
@@ -109,18 +107,18 @@ function StatusPage() {
                   d="Digital PDF to your inbox."
                 />
               </div>
-              {search.payment_intent && (
+              {paymentIntent && (
                 <p className="mt-6 text-xs text-muted-foreground">
                   Payment ID:{" "}
                   <button
                     type="button"
                     onClick={() => {
-                      navigator.clipboard.writeText(search.payment_intent!);
+                      navigator.clipboard.writeText(paymentIntent!);
                       toast.success("Payment ID copied");
                     }}
                     className="inline-flex items-center gap-1 font-mono text-ink underline-offset-2 hover:underline"
                   >
-                    {search.payment_intent.slice(0, 20)}…
+                    {paymentIntent.slice(0, 20)}…
                     <Copy className="h-3 w-3" />
                   </button>
                 </p>
@@ -130,12 +128,12 @@ function StatusPage() {
 
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <Button asChild variant="primary" size="lg">
-              <Link to={cfg.cta.to}>
+              <Link href={cfg.cta.to}>
                 {cfg.cta.label} <ArrowRight className="ml-1 h-4 w-4" />
               </Link>
             </Button>
             <Button asChild variant="ghost">
-              <Link to="/">Back to home</Link>
+              <Link href="/">Back to home</Link>
             </Button>
           </div>
         </div>

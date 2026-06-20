@@ -24,7 +24,8 @@ export const PACKAGES: Package[] = [
     price: 399,
     priceLabel: "$399",
     delivery: "48–72 Hours",
-    blurb: "The essentials—public records, ownership, and your verified disclosures in one polished PDF.",
+    blurb:
+      "The essentials—public records, ownership, and your verified disclosures in one polished PDF.",
     features: [
       "Property Profile",
       "Public Records Summary",
@@ -60,7 +61,8 @@ export const PACKAGES: Package[] = [
     price: 2500,
     priceLabel: "From $2,500",
     delivery: "Contact for timeline",
-    blurb: "A professional visit confirms condition with photo documentation. Availability varies by region.",
+    blurb:
+      "A professional visit confirms condition with photo documentation. Availability varies by region.",
     features: [
       "Everything in Premium",
       "Professional Property Visit",
@@ -128,10 +130,28 @@ export const TESTIMONIALS = [
 ];
 
 export const SERVICE_AREAS = [
-  "Austin, TX", "Dallas–Fort Worth, TX", "Houston, TX", "Phoenix, AZ",
-  "Denver, CO", "Nashville, TN", "Atlanta, GA", "Charlotte, NC",
-  "Raleigh, NC", "Tampa, FL", "Orlando, FL", "Miami, FL",
-  "Naples, FL", "Bellevue, WA", "Seattle, WA", "Portland, OR",
-  "San Diego, CA", "Los Angeles, CA", "Bay Area, CA", "Las Vegas, NV",
-  "Boise, ID", "Salt Lake City, UT", "Minneapolis, MN", "Chicago, IL",
+  "Austin, TX",
+  "Dallas–Fort Worth, TX",
+  "Houston, TX",
+  "Phoenix, AZ",
+  "Denver, CO",
+  "Nashville, TN",
+  "Atlanta, GA",
+  "Charlotte, NC",
+  "Raleigh, NC",
+  "Tampa, FL",
+  "Orlando, FL",
+  "Miami, FL",
+  "Naples, FL",
+  "Bellevue, WA",
+  "Seattle, WA",
+  "Portland, OR",
+  "San Diego, CA",
+  "Los Angeles, CA",
+  "Bay Area, CA",
+  "Las Vegas, NV",
+  "Boise, ID",
+  "Salt Lake City, UT",
+  "Minneapolis, MN",
+  "Chicago, IL",
 ];

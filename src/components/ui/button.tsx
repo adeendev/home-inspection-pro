@@ -11,7 +11,8 @@ const buttonVariants = cva(
       variant: {
         default: "bg-primary text-primary-foreground shadow hover:bg-primary/90",
         primary: "bg-ink text-cream shadow-sm hover:bg-ink-soft",
-        brass: "gradient-brass text-ink shadow-[0_10px_30px_-10px_color-mix(in_oklab,var(--brass)_70%,transparent)] hover:brightness-105",
+        brass:
+          "gradient-brass text-ink shadow-[0_10px_30px_-10px_color-mix(in_oklab,var(--brass)_70%,transparent)] hover:brightness-105",
         glass: "border border-cream/20 bg-cream/10 text-cream backdrop-blur hover:bg-cream/15",
         destructive: "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
         outline:
