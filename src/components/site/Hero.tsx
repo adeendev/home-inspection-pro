@@ -84,12 +84,18 @@ export function Hero() {
             anyone else does.
           </motion.h1>
 
-          <motion.p {...fadeUp(0.24)}             className="mt-6 mx-auto max-w-xl text-sm text-cream/75 md:text-base">
+          <motion.p
+            {...fadeUp(0.24)}
+            className="mt-6 mx-auto max-w-xl text-sm text-cream/75 md:text-base"
+          >
             Comprehensive, homeowner-verified property reports—public records, trusted data sources,
             and your disclosures, prepared by experienced analysts into one professional PDF.
           </motion.p>
 
-          <motion.div {...fadeUp(0.36)}             className="mt-7 flex flex-wrap items-center justify-center gap-3">
+          <motion.div
+            {...fadeUp(0.36)}
+            className="mt-7 flex flex-wrap items-center justify-center gap-3"
+          >
             <Button asChild size="lg" variant="brass">
               <Link href="/order">
                 Order Your Report
