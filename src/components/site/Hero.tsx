@@ -61,11 +61,11 @@ export function Hero() {
         />
       </div>
 
-      <div className="container-x relative pt-24 pb-28 md:pt-36 md:pb-40">
-        <div className="max-w-3xl">
+      <div className="container-x relative pt-20 pb-16 md:pt-28 md:pb-24">
+        <div className="mx-auto max-w-3xl text-center">
           <motion.span
             {...fadeUp(0)}
-            className="inline-flex items-center gap-2 rounded-full border border-cream/15 bg-cream/5 px-3 py-1.5 text-xs uppercase tracking-[0.22em] text-cream/85 backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border border-cream/15 bg-cream/5 px-3 py-1.5 text-xs uppercase tracking-[0.22em] text-cream/85 backdrop-blur mx-auto"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-brass animate-pulse-soft" />
             Homeowner-Verified Reports
@@ -73,7 +73,7 @@ export function Hero() {
 
           <motion.h1
             {...fadeUp(0.12)}
-            className="mt-2 font-display text-[2.6rem] leading-[1.05] text-cream text-balance md:text-6xl lg:text-7xl"
+            className="mt-2 font-display text-[2.2rem] leading-[1.05] text-cream text-balance md:text-5xl lg:text-6xl"
           >
             Know your home&apos;s
             <br />
@@ -84,12 +84,12 @@ export function Hero() {
             anyone else does.
           </motion.h1>
 
-          <motion.p {...fadeUp(0.24)} className="mt-6 max-w-xl text-base text-cream/75 md:text-lg">
+          <motion.p {...fadeUp(0.24)}             className="mt-6 mx-auto max-w-xl text-sm text-cream/75 md:text-base">
             Comprehensive, homeowner-verified property reports—public records, trusted data sources,
             and your disclosures, prepared by experienced analysts into one professional PDF.
           </motion.p>
 
-          <motion.div {...fadeUp(0.36)} className="mt-9 flex flex-wrap items-center gap-3">
+          <motion.div {...fadeUp(0.36)}             className="mt-7 flex flex-wrap items-center justify-center gap-3">
             <Button asChild size="lg" variant="brass">
               <Link href="/order">
                 Order Your Report
@@ -103,7 +103,7 @@ export function Hero() {
 
           <motion.ul
             {...fadeUp(0.48)}
-            className="mt-12 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4"
+            className="mt-8 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4 mx-auto"
           >
             {[
               { icon: Clock, label: "48hr – 3 day delivery" },
@@ -114,7 +114,7 @@ export function Hero() {
               <motion.li
                 key={label}
                 whileHover={{ scale: 1.05, borderColor: "rgba(255,255,255,0.25)" }}
-                className="flex items-center gap-2 rounded-lg border border-cream/10 bg-cream/5 px-3 py-2.5 text-xs text-cream/85 backdrop-blur transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+                className="flex items-center gap-2 rounded-lg border border-cream/10 bg-cream/5 px-3 py-2 text-[11px] text-cream/85 backdrop-blur transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
               >
                 <Icon className="h-4 w-4 shrink-0 text-brass" />
                 {label}

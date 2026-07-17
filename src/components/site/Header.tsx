@@ -14,7 +14,7 @@ const NAV = [
   { label: "Contact", href: "/#contact" },
 ];
 
-const NAV_DESKTOP = NAV.filter((i) => !["Home", "Sample Report"].includes(i.label));
+const NAV_DESKTOP = NAV.filter((i) => !["Home"].includes(i.label));
 
 const BP = 1024;
 
@@ -64,12 +64,12 @@ export function SiteHeader() {
           </div>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-0.5 lg:flex">
           {NAV_DESKTOP.map((i) => (
             <a
               key={i.href}
               href={i.href}
-              className="rounded-lg px-3.5 py-2 text-sm font-medium text-ink/70 transition-all duration-200 hover:bg-black/5 hover:text-ink"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-ink/70 transition-all duration-200 hover:bg-black/5 hover:text-ink"
             >
               {i.label}
             </a>
@@ -77,9 +77,6 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
-          <Button asChild variant="ghost" size="sm" className="text-ink/80 hover:text-ink">
-            <Link href="/sample-report">View Sample</Link>
-          </Button>
           <Button
             asChild
             size="sm"
@@ -107,13 +104,15 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {/* backdrop */}
       {open && (
-        <div className="fixed inset-0 z-30 bg-black/20 lg:hidden" onClick={() => setOpen(false)} />
+        <div
+          className="fixed inset-0 z-30 bg-black/40 backdrop-blur-sm lg:hidden"
+          onClick={() => setOpen(false)}
+        />
       )}
 
       <div
-        className={`fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 lg:hidden ${
+        className={`fixed top-14 right-0 bottom-0 left-0 z-40 flex flex-col bg-white/95 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-transform duration-300 lg:hidden ${
           open ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -123,22 +122,17 @@ export function SiteHeader() {
               key={i.href}
               href={i.href}
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-lg px-3.5 py-3 text-sm font-medium text-ink transition-colors hover:bg-gray-100 hover:text-ink"
+              className="flex items-center gap-3 rounded-lg px-3.5 py-3 text-sm font-medium text-ink transition-colors hover:bg-black/5 hover:text-ink"
             >
               {i.label === "Home" && <Home className="h-4 w-4 text-brass" />}
               {i.label}
             </a>
           ))}
         </nav>
-        <div className="mt-auto border-t px-4 py-6">
+        <div className="mt-auto border-t border-border/50 px-4 py-6">
           <Button asChild className="w-full bg-ink text-cream shadow-md active:scale-[0.97]">
             <Link href="/order" onClick={() => setOpen(false)}>
               Order Report
-            </Link>
-          </Button>
-          <Button asChild variant="ghost" className="mt-2.5 w-full">
-            <Link href="/sample-report" onClick={() => setOpen(false)}>
-              View Sample Report
             </Link>
           </Button>
           <p className="mt-4 text-center text-xs text-muted-foreground">(800) 555-0142</p>

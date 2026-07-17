@@ -4,6 +4,20 @@ import { Check, X } from "lucide-react";
 import { motion } from "framer-motion";
 import desk from "@/assets/report-desk.jpg";
 
+const CHECKS = [
+  "Combines homeowner-provided data with public records",
+  "Prepared by experienced property analysts",
+  "Professional PDF report delivered digitally",
+  "Every report is custom-created for the property",
+];
+
+const NOT_ITEMS = [
+  { t: "Not a home inspection", d: "We don't physically inspect or evaluate." },
+  { t: "Not an appraisal", d: "We don't estimate property value." },
+  { t: "Not a brokerage", d: "We're not affiliated with buying or selling." },
+  { t: "Not legal advice", d: "We don't substitute licensed counsel." },
+];
+
 export function About() {
   return (
     <motion.section
@@ -15,6 +29,7 @@ export function About() {
       className="container-x py-24 md:py-32"
     >
       <div className="grid items-center gap-14 md:grid-cols-2">
+        {/* Left: copy */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -25,62 +40,33 @@ export function About() {
           <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
             A new standard in property documentation.
           </h2>
-          <p className="mt-5 max-w-xl text-muted-foreground">
+          <p className="mt-5 max-w-xl leading-relaxed text-muted-foreground">
             Accurate Home Report is a homeowner-reporting service that creates detailed property
             reports using information supplied by you, together with public records and trusted
             third-party property data—assembled by experienced analysts into one professional PDF.
           </p>
 
-          <ul className="mt-7 space-y-3">
-            {[
-              "Combines homeowner-provided data with public records",
-              "Prepared by experienced property analysts",
-              "Professional PDF report delivered digitally",
-              "Every report is custom-created for the property",
-            ].map((t, i) => (
+          {/* What we do — check list */}
+          <ul className="mt-8 grid gap-3 sm:grid-cols-2">
+            {CHECKS.map((t, i) => (
               <motion.li
                 key={t}
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
-                className="flex items-start gap-3 text-ink/85"
+                className="flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm text-ink/85 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-brass/40 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.1)]"
               >
-                <span className="mt-0.5 grid h-5 w-5 place-items-center rounded-full bg-brass/15 text-brass">
+                <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full bg-brass/15 text-brass">
                   <Check className="h-3 w-3" strokeWidth={3} />
                 </span>
                 {t}
               </motion.li>
             ))}
           </ul>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-10 rounded-2xl border border-border bg-card p-6"
-          >
-            <h3 className="font-display text-lg text-ink">What Accurate Home Report is not</h3>
-            <ul className="mt-3 grid gap-2 sm:grid-cols-2">
-              {[
-                ["Not a home inspection", "We don't physically inspect or evaluate."],
-                ["Not an appraisal", "We don't estimate property value."],
-                ["Not a brokerage", "We're not affiliated with buying or selling."],
-                ["Not legal advice", "We don't substitute licensed counsel."],
-              ].map(([t, d]) => (
-                <li key={t} className="flex items-start gap-2.5 text-sm">
-                  <X className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
-                  <div>
-                    <p className="font-medium text-ink">{t}</p>
-                    <p className="text-muted-foreground">{d}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          </motion.div>
         </motion.div>
 
+        {/* Right: image + stat badge */}
         <motion.div
           initial={{ opacity: 0, x: 30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -88,7 +74,7 @@ export function About() {
           transition={{ duration: 0.6, delay: 0.1 }}
           className="relative"
         >
-          <div className="absolute -inset-6 -z-10 rounded-3xl bg-brass/15 blur-2xl" />
+          <div className="absolute -inset-6 -z-10 rounded-3xl bg-brass/10 blur-2xl" />
           <div className="overflow-hidden rounded-2xl border border-border shadow-elegant">
             <img
               src={desk.src}
@@ -112,6 +98,47 @@ export function About() {
             </p>
           </motion.div>
         </motion.div>
+      </div>
+
+      {/* What we're NOT */}
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="mt-16"
+      >
+        <h3 className="font-display text-2xl text-ink text-balance md:text-3xl">
+          What Accurate Home Report is not
+        </h3>
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {NOT_ITEMS.map(({ t, d }, i) => (
+            <motion.div
+              key={t}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: 0.3 + i * 0.08 }}
+              whileHover={{ y: -4 }}
+              className="group rounded-2xl border border-border bg-card p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-destructive/30 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.1)]"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors duration-300 group-hover:bg-destructive/10 group-hover:text-destructive">
+                <X className="h-4 w-4" strokeWidth={2.5} />
+              </span>
+              <p className="mt-4 font-display text-lg text-ink transition-colors duration-300 group-hover:text-destructive">
+                {t}
+              </p>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{d}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      {/* Section divider */}
+      <div className="mt-20 flex items-center gap-4">
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
+        <span className="h-1.5 w-1.5 rounded-full bg-brass/40" />
+        <div className="h-px flex-1 bg-gradient-to-r from-transparent via-border to-transparent" />
       </div>
     </motion.section>
   );
