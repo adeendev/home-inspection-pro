@@ -30,9 +30,9 @@ export function Testimonials() {
       transition={{ duration: 0.6 }}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
-      className="container-x py-24 md:py-32"
+      className="container-x py-16 md:py-24 lg:py-32"
     >
-      <div className="grid items-center gap-14 md:grid-cols-[1fr_1.4fr]">
+      <div className="grid items-center gap-10 md:gap-14 md:grid-cols-[1fr_1.4fr]">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -40,7 +40,7 @@ export function Testimonials() {
           transition={{ duration: 0.5 }}
         >
           <span className="eyebrow">Homeowner Stories</span>
-          <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
+          <h2 className="mt-3 font-display text-3xl text-ink text-balance md:text-4xl lg:text-5xl">
             Trusted by thoughtful homeowners across the country.
           </h2>
           <div className="mt-6 flex items-center gap-3 text-sm text-muted-foreground">
@@ -61,10 +61,10 @@ export function Testimonials() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.15 }}
-          className="relative rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-12"
+          className="relative rounded-3xl border border-border bg-card p-6 shadow-elegant md:p-8 lg:p-12"
         >
           {/* Quote icon */}
-          <div className="absolute -top-5 left-8 grid h-10 w-10 place-items-center rounded-full bg-brass text-ink shadow-[0_4px_14px_-2px_color-mix(in_oklab,_var(--brass)_40%,_transparent)]">
+          <div className="absolute -top-5 left-6 grid h-10 w-10 place-items-center rounded-full bg-brass text-ink shadow-[0_4px_14px_-2px_color-mix(in_oklab,_var(--brass)_40%,_transparent)] md:left-8">
             <Quote className="h-5 w-5" />
           </div>
 
@@ -76,7 +76,7 @@ export function Testimonials() {
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
             >
-              <p className="font-display text-2xl leading-snug text-ink text-balance md:text-3xl">
+              <p className="font-display text-xl leading-snug text-ink text-balance md:text-2xl lg:text-3xl">
                 &ldquo;{t.quote}&rdquo;
               </p>
               <div className="mt-8 flex items-center justify-between border-t pt-6">

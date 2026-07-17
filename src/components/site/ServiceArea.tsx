@@ -12,9 +12,9 @@ export function ServiceArea() {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
-      className="container-x py-24 md:py-32"
+      className="container-x py-16 md:py-24 lg:py-32"
     >
-      <div className="grid items-center gap-14 lg:grid-cols-2">
+      <div className="grid items-center gap-10 md:gap-14 md:grid-cols-2">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -45,7 +45,7 @@ export function ServiceArea() {
           transition={{ duration: 0.6, delay: 0.15 }}
         >
           <span className="eyebrow">Service Area</span>
-          <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
+          <h2 className="mt-3 font-display text-3xl text-ink text-balance md:text-4xl lg:text-5xl">
             Documentation nationwide. Verified visits in select metros.
           </h2>
           <p className="mt-4 text-muted-foreground">

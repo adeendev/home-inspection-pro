@@ -19,8 +19,8 @@ export function FAQ() {
       id="faq"
       className="bg-secondary/40"
     >
-      <div className="container-x py-24 md:py-32">
-        <div className="grid gap-12 md:grid-cols-[1fr_1.5fr]">
+      <div className="container-x py-16 md:py-24 lg:py-32">
+        <div className="grid gap-8 md:gap-12 md:grid-cols-[1fr_1.5fr]">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -28,7 +28,7 @@ export function FAQ() {
             transition={{ duration: 0.5 }}
           >
             <span className="eyebrow">FAQ</span>
-            <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
+            <h2 className="mt-3 font-display text-3xl text-ink text-balance md:text-4xl lg:text-5xl">
               Questions, answered.
             </h2>
             <p className="mt-4 text-muted-foreground">
@@ -51,7 +51,7 @@ export function FAQ() {
             <Accordion
               type="single"
               collapsible
-              className="divide-y rounded-2xl border border-border bg-card px-6"
+              className="divide-y rounded-2xl border border-border bg-card px-4 md:px-6"
             >
               {FAQS.map((f, idx) => (
                 <AccordionItem key={idx} value={`f-${idx}`} className="border-none py-1">

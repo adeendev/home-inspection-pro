@@ -43,9 +43,9 @@ export function Contact() {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
       id="contact"
-      className="container-x py-24 md:py-32"
+      className="container-x py-16 md:py-24 lg:py-32"
     >
-      <div className="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
+      <div className="grid gap-10 md:gap-14 lg:grid-cols-[1fr_1.1fr]">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -53,7 +53,7 @@ export function Contact() {
           transition={{ duration: 0.6 }}
         >
           <span className="eyebrow">Contact</span>
-          <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
+          <h2 className="mt-3 font-display text-3xl text-ink text-balance md:text-4xl lg:text-5xl">
             Speak with a property analyst.
           </h2>
           <p className="mt-4 text-muted-foreground">
@@ -138,7 +138,7 @@ export function Contact() {
               })
               .finally(() => setSending(false));
           }}
-          className="rounded-3xl border border-border bg-card p-8 shadow-elegant md:p-10"
+          className="rounded-3xl border border-border bg-card p-6 shadow-elegant md:p-8 lg:p-10"
         >
           <div className="grid gap-4 sm:grid-cols-2">
             <FieldError
@@ -190,7 +190,7 @@ export function Contact() {
             <p className="text-xs text-muted-foreground">
               By submitting, you agree to our privacy practices.
             </p>
-            <div className="flex gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button asChild variant="ghost">
                 <Link href="/order">
                   Skip — Order now <ArrowRight className="ml-1 h-4 w-4" />

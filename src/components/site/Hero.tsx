@@ -120,7 +120,7 @@ export function Hero() {
               <motion.li
                 key={label}
                 whileHover={{ scale: 1.05, borderColor: "rgba(255,255,255,0.25)" }}
-                className="flex items-center gap-2 rounded-lg border border-cream/10 bg-cream/5 px-3 py-2 text-[11px] text-cream/85 backdrop-blur transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+                className="flex items-center gap-2 rounded-lg border border-cream/10 bg-cream/5 px-3 py-2.5 text-[11px] text-cream/85 backdrop-blur transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
               >
                 <Icon className="h-4 w-4 shrink-0 text-brass" />
                 {label}

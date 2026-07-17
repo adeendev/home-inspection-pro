@@ -15,7 +15,7 @@ export function FinalCTA() {
       className="relative isolate overflow-hidden gradient-ink text-cream"
     >
       <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_bottom_right,_color-mix(in_oklab,_var(--brass)_22%,_transparent)_0%,_transparent_55%)]" />
-      <div className="container-x py-24 text-center md:py-32">
+      <div className="container-x py-16 text-center md:py-24 lg:py-32">
         <motion.span
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -30,7 +30,7 @@ export function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mx-auto mt-4 max-w-3xl font-display text-4xl text-cream text-balance md:text-6xl"
+          className="mx-auto mt-4 max-w-3xl font-display text-3xl text-cream text-balance md:text-5xl lg:text-6xl"
         >
           Ready to document your property?
         </motion.h2>

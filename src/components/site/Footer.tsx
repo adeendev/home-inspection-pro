@@ -4,8 +4,8 @@ import { SITE } from "@/lib/site";
 export function SiteFooter() {
   return (
     <footer className="gradient-ink text-cream/85">
-      <div className="container-x py-16">
-        <div className="grid gap-12 md:grid-cols-4">
+      <div className="container-x py-10 md:py-16">
+        <div className="grid gap-8 md:grid-cols-4 md:gap-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">
               <span className="grid h-9 w-9 place-items-center rounded-md border border-cream/20 text-cream">

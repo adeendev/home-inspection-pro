@@ -21,7 +21,7 @@ export function TrustBar() {
       className="border-y border-border bg-secondary/40"
     >
       <div className="container-x py-4">
-        <ul className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 text-[0.78rem] uppercase tracking-[0.18em] text-muted-foreground">
+        <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-[0.78rem] uppercase tracking-[0.18em] text-muted-foreground md:gap-x-10">
           {ITEMS.map(({ icon: Icon, label }, i) => (
             <motion.li
               key={label}

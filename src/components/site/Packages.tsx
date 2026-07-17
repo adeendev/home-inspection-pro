@@ -15,7 +15,7 @@ export function Packages() {
       viewport={{ once: true, margin: "-50px" }}
       transition={{ duration: 0.6 }}
       id="packages"
-      className="container-x py-24 md:py-32"
+      className="container-x py-16 md:py-24 lg:py-32"
     >
       <motion.div
         initial={{ opacity: 0, y: 30 }}
@@ -25,7 +25,7 @@ export function Packages() {
         className="mx-auto max-w-2xl text-center"
       >
         <span className="eyebrow">Pricing</span>
-        <h2 className="mt-3 font-display text-4xl text-ink text-balance md:text-5xl">
+        <h2 className="mt-3 font-display text-3xl text-ink text-balance md:text-4xl lg:text-5xl">
           Report packages.
         </h2>
         <p className="mt-4 text-muted-foreground">
@@ -47,7 +47,7 @@ export function Packages() {
               boxShadow: "0 24px 64px -12px rgba(0,0,0,0.18)",
             }}
             className={cn(
-              "relative flex flex-col rounded-3xl border bg-card p-8 transition",
+              "relative flex flex-col rounded-3xl border bg-card p-6 transition md:p-8",
               p.popular ? "border-brass/60 shadow-elegant" : "border-border",
             )}
           >
@@ -61,7 +61,7 @@ export function Packages() {
             </p>
             <h3 className="mt-2 font-display text-3xl text-ink">{p.name}</h3>
             <div className="mt-4 flex items-baseline gap-1">
-              <span className="font-display text-5xl text-ink">{p.priceLabel}</span>
+              <span className="font-display text-4xl text-ink md:text-5xl">{p.priceLabel}</span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">{p.blurb}</p>
 

@@ -46,7 +46,7 @@ export function Process() {
       id="process"
       className="gradient-ink text-cream"
     >
-      <div className="container-x py-24 md:py-32">
+      <div className="container-x py-16 md:py-24 lg:py-32">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -55,7 +55,7 @@ export function Process() {
           className="max-w-2xl"
         >
           <span className="eyebrow">The Process</span>
-          <h2 className="mt-3 font-display text-4xl text-cream text-balance md:text-5xl">
+          <h2 className="mt-3 font-display text-3xl text-cream text-balance md:text-4xl lg:text-5xl">
             A straightforward, secure path from order to delivery.
           </h2>
           <p className="mt-4 text-cream/70">
@@ -81,7 +81,7 @@ export function Process() {
                   i === STEPS.length - 1 ? "justify-center gap-4" : "justify-between"
                 }`}
               >
-                <span className="font-display text-3xl italic text-brass">{s.n}</span>
+                <span className="font-display text-2xl italic text-brass md:text-3xl">{s.n}</span>
                 <span className="text-[0.65rem] uppercase tracking-[0.2em] text-cream/45">
                   Step {i + 1}
                 </span>
