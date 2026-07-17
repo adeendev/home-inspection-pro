@@ -125,9 +125,14 @@ export function Contact() {
             if (Object.keys(errs).length > 0) return;
 
             setSending(true);
-            // Will be replaced with actual API call
-            new Promise<void>((resolve) => setTimeout(resolve, 700))
-              .then(() => {
+            fetch("/api/contact", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(values),
+            })
+              .then(async (res) => {
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Failed to send");
                 toast.success("Message received. We'll reply within one business day.");
                 form.reset();
                 setErrors({});

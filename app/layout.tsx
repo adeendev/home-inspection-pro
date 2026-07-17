@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import { Providers } from "./providers";
 import "../src/styles.css";
@@ -15,6 +15,12 @@ const inter = Inter({
   variable: "--font-sans",
   weight: ["400", "500", "600", "700"],
 });
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#1a2236",
+};
 
 export const metadata: Metadata = {
   title: "Accurate Home Report — Homeowner-Verified Property Reports",
@@ -33,9 +39,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
-      <head>
-        <meta name="theme-color" content="#1a2236" />
-      </head>
       <body>
         <Providers>{children}</Providers>
       </body>

@@ -60,7 +60,19 @@ export function SiteFooter() {
           <p>
             © {new Date().getFullYear()} {SITE.name}. All rights reserved.
           </p>
-          <p>Privacy · Terms · Disclosures</p>
+          <p>
+            <Link href="/privacy" className="hover:text-brass">
+              Privacy
+            </Link>
+            {" · "}
+            <Link href="/terms" className="hover:text-brass">
+              Terms
+            </Link>
+            {" · "}
+            <Link href="/disclosures" className="hover:text-brass">
+              Disclosures
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
