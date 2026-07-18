@@ -76,6 +76,7 @@ export function Process() {
                 i === STEPS.length - 1 ? "md:col-span-2 lg:col-span-3 text-center" : ""
               }`}
             >
+              <span className="absolute left-0 top-6 bottom-6 w-[2px] rounded-full bg-gradient-to-b from-brass/60 to-brass/10" />
               <div
                 className={`flex items-baseline ${
                   i === STEPS.length - 1 ? "justify-center gap-4" : "justify-between"

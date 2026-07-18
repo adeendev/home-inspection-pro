@@ -30,7 +30,7 @@ export function FinalCTA() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.1 }}
-          className="mx-auto mt-4 max-w-3xl font-display text-3xl text-cream text-balance md:text-5xl lg:text-6xl"
+          className="mx-auto mt-4 max-w-3xl font-display text-3xl text-cream text-balance md:text-4xl lg:text-5xl"
         >
           Ready to document your property?
         </motion.h2>

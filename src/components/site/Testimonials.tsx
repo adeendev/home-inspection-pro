@@ -80,9 +80,17 @@ export function Testimonials() {
                 &ldquo;{t.quote}&rdquo;
               </p>
               <div className="mt-8 flex items-center justify-between border-t pt-6">
-                <div>
-                  <p className="font-medium text-ink">{t.name}</p>
-                  <p className="text-sm text-muted-foreground">{t.role}</p>
+                <div className="flex items-center gap-3">
+                  <span className="grid h-10 w-10 place-items-center rounded-full bg-brass/15 font-display text-sm font-bold text-brass">
+                    {t.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
+                  </span>
+                  <div>
+                    <p className="font-medium text-ink">{t.name}</p>
+                    <p className="text-sm text-muted-foreground">{t.role}</p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-2">
                   <button

@@ -68,7 +68,7 @@ export function Contact() {
               transition={{ duration: 0.4, delay: 0.1 }}
               className="flex items-start gap-3"
             >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream">
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink/5 text-ink">
                 <Phone className="h-4 w-4" />
               </span>
               <div>
@@ -83,7 +83,7 @@ export function Contact() {
               transition={{ duration: 0.4, delay: 0.18 }}
               className="flex items-start gap-3"
             >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream">
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink/5 text-ink">
                 <Mail className="h-4 w-4" />
               </span>
               <div>
@@ -98,7 +98,7 @@ export function Contact() {
               transition={{ duration: 0.4, delay: 0.26 }}
               className="flex items-start gap-3"
             >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink text-cream">
+              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink/5 text-ink">
                 <MapPin className="h-4 w-4" />
               </span>
               <div>
@@ -193,7 +193,14 @@ export function Contact() {
           </div>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="text-xs text-muted-foreground">
-              By submitting, you agree to our privacy practices.
+              By submitting, you agree to our{" "}
+              <Link
+                href="/privacy"
+                className="underline underline-offset-4 hover:text-ink transition-colors"
+              >
+                privacy practices
+              </Link>
+              .
             </p>
             <div className="flex flex-wrap gap-2">
               <Button asChild variant="ghost">

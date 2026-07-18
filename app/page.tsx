@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { SiteHeader } from "@/components/site/Header";
 import { SiteFooter } from "@/components/site/Footer";
 import { Hero } from "@/components/site/Hero";
-import { TrustBar } from "@/components/site/TrustBar";
 import { About } from "@/components/site/About";
 import { WhyUs } from "@/components/site/WhyUs";
 import { Process } from "@/components/site/Process";
@@ -74,7 +73,6 @@ export default function HomePage() {
       <SiteHeader />
       <main>
         <Hero />
-        <TrustBar />
         <About />
         <Packages />
         <Process />

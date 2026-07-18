@@ -82,7 +82,7 @@ export function About() {
               width={1600}
               height={1200}
               loading="lazy"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover aspect-[4/3]"
             />
           </div>
           <motion.div
@@ -120,12 +120,12 @@ export function About() {
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.3 + i * 0.08 }}
               whileHover={{ y: -4 }}
-              className="group rounded-2xl border border-border bg-card p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-destructive/30 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.1)]"
+              className="group rounded-2xl border border-border bg-card p-5 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-brass/30 hover:shadow-[0_12px_32px_-8px_rgba(0,0,0,0.1)]"
             >
-              <span className="grid h-9 w-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors duration-300 group-hover:bg-destructive/10 group-hover:text-destructive">
+              <span className="grid h-9 w-9 place-items-center rounded-lg bg-muted text-muted-foreground transition-colors duration-300 group-hover:bg-brass/10 group-hover:text-brass">
                 <X className="h-4 w-4" strokeWidth={2.5} />
               </span>
-              <p className="mt-4 font-display text-lg text-ink transition-colors duration-300 group-hover:text-destructive">
+              <p className="mt-4 font-display text-lg text-ink transition-colors duration-300 group-hover:text-brass">
                 {t}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{d}</p>

@@ -4,7 +4,7 @@ import { SITE } from "@/lib/site";
 export function SiteFooter() {
   return (
     <footer className="gradient-ink text-cream/85">
-      <div className="container-x py-10 md:py-16">
+      <div className="container-x py-14 md:py-20">
         <div className="grid gap-8 md:grid-cols-4 md:gap-12">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5">

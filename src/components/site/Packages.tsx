@@ -48,7 +48,11 @@ export function Packages() {
             }}
             className={cn(
               "relative flex flex-col rounded-3xl border bg-card p-6 transition md:p-8",
-              p.popular ? "border-brass/60 shadow-elegant" : "border-border",
+              p.popular
+                ? "border-brass/60 shadow-elegant bg-gradient-to-b from-brass/[0.03] to-card order-1 md:order-none"
+                : "border-border",
+              p.id === "basic" ? "order-2 md:order-none" : "",
+              p.id === "verified" ? "order-3 md:order-none" : "",
             )}
           >
             {p.popular && (
@@ -62,6 +66,7 @@ export function Packages() {
             <h3 className="mt-2 font-display text-3xl text-ink">{p.name}</h3>
             <div className="mt-4 flex items-baseline gap-1">
               <span className="font-display text-4xl text-ink md:text-5xl">{p.priceLabel}</span>
+              <span className="text-sm text-muted-foreground">/ report</span>
             </div>
             <p className="mt-3 text-sm text-muted-foreground">{p.blurb}</p>
 

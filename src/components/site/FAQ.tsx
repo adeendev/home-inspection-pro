@@ -55,7 +55,7 @@ export function FAQ() {
             >
               {FAQS.map((f, idx) => (
                 <AccordionItem key={idx} value={`f-${idx}`} className="border-none py-1">
-                  <AccordionTrigger className="text-left font-display text-lg text-ink hover:no-underline">
+                  <AccordionTrigger className="text-left font-display text-lg text-ink hover:no-underline [&[data-state=open]]:pl-3 [&[data-state=open]]:border-l-2 [&[data-state=open]]:border-brass [&[data-state=open]]:transition-all [&[data-state=open]]:duration-300">
                     {f.q}
                   </AccordionTrigger>
                   <AccordionContent className="text-muted-foreground">{f.a}</AccordionContent>

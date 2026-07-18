@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, ShieldCheck, FileCheck2, Lock, Clock } from "lucide-react";
+import { ArrowRight, ArrowDown, ShieldCheck, FileCheck2, Lock, Clock } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import hero from "@/assets/hero-home.jpg";
@@ -120,7 +120,7 @@ export function Hero() {
               <motion.li
                 key={label}
                 whileHover={{ scale: 1.05, borderColor: "rgba(255,255,255,0.25)" }}
-                className="flex items-center gap-2 rounded-lg border border-cream/10 bg-cream/5 px-3 py-2.5 text-[11px] text-cream/85 backdrop-blur transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
+                className="flex items-center gap-2 rounded-lg border border-cream/10 bg-cream/5 px-3 py-2.5 text-xs text-cream/85 backdrop-blur transition-all duration-300 hover:shadow-[0_8px_24px_rgba(0,0,0,0.3)]"
               >
                 <Icon className="h-4 w-4 shrink-0 text-brass" />
                 {label}
@@ -129,6 +129,19 @@ export function Hero() {
           </motion.ul>
         </div>
       </div>
+
+      <motion.a
+        href="#about"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-cream/40 hover:text-cream/70 transition-colors"
+        aria-label="Scroll down"
+      >
+        <span className="text-[11px] uppercase tracking-widest">Explore</span>
+        <ArrowDown className="h-4 w-4 animate-bounce" />
+      </motion.a>
     </motion.section>
   );
 }

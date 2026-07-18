@@ -49,17 +49,28 @@ export function SiteHeader() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
           ? "bg-white/90 shadow-[0_1px_0_rgba(0,0,0,0.06),0_8px_30px_-8px_rgba(0,0,0,0.12)] backdrop-blur-xl"
-          : "bg-white/80 shadow-[0_1px_0_rgba(0,0,0,0.04)] backdrop-blur-md"
+          : "bg-transparent"
       }`}
     >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-5 lg:h-16 lg:px-8">
         <Link href="/" className="group flex items-center gap-2.5 shrink-0">
-          <span className="grid h-9 w-9 place-items-center rounded-lg gradient-ink text-cream shadow-[0_2px_8px_-2px_rgba(26,34,54,0.3)] transition-shadow duration-300 group-hover:shadow-[0_4px_14px_-2px_rgba(26,34,54,0.4)]">
+          <span
+            className={`grid h-9 w-9 place-items-center rounded-lg shadow-[0_2px_8px_-2px_rgba(26,34,54,0.3)] transition-all duration-500 group-hover:shadow-[0_4px_14px_-2px_rgba(26,34,54,0.4)] ${
+              scrolled ? "gradient-ink text-cream" : "bg-white/15 text-white ring-1 ring-white/20"
+            }`}
+          >
             <span className="font-display text-lg leading-none">A</span>
           </span>
           <div className="hidden sm:block">
-            <span className="font-display text-lg tracking-tight text-ink">
-              Accurate <span className="text-muted-foreground">Home Report</span>
+            <span
+              className={`font-display text-lg tracking-tight transition-colors duration-500 ${
+                scrolled ? "text-ink" : "text-white"
+              }`}
+            >
+              Accurate{" "}
+              <span className={scrolled ? "text-muted-foreground" : "text-white/60"}>
+                Home Report
+              </span>
             </span>
           </div>
         </Link>
@@ -69,7 +80,11 @@ export function SiteHeader() {
             <a
               key={i.href}
               href={i.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-ink/70 transition-all duration-200 hover:bg-black/5 hover:text-ink"
+              className={`rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                scrolled
+                  ? "text-ink/70 hover:bg-black/5 hover:text-ink"
+                  : "text-white/70 hover:bg-white/10 hover:text-white"
+              }`}
             >
               {i.label}
             </a>
@@ -80,7 +95,11 @@ export function SiteHeader() {
           <Button
             asChild
             size="sm"
-            className="bg-ink text-cream shadow-[0_2px_10px_-3px_rgba(26,34,54,0.3)] transition-all duration-200 hover:bg-ink-soft hover:shadow-[0_4px_16px_-4px_rgba(26,34,54,0.35)] active:scale-[0.97]"
+            className={`shadow-[0_2px_10px_-3px_rgba(26,34,54,0.3)] transition-all duration-200 active:scale-[0.97] ${
+              scrolled
+                ? "bg-ink text-cream hover:bg-ink-soft hover:shadow-[0_4px_16px_-4px_rgba(26,34,54,0.35)]"
+                : "bg-white/15 text-white hover:bg-white/25 ring-1 ring-white/20"
+            }`}
           >
             <Link href="/order">Order Report</Link>
           </Button>
@@ -90,14 +109,20 @@ export function SiteHeader() {
           <Button
             asChild
             size="sm"
-            className="h-9 bg-ink text-cream shadow-[0_2px_10px_-3px_rgba(26,34,54,0.3)] active:scale-[0.97]"
+            className={`h-9 shadow-[0_2px_10px_-3px_rgba(26,34,54,0.3)] active:scale-[0.97] ${
+              scrolled ? "bg-ink text-cream" : "bg-white/15 text-white ring-1 ring-white/20"
+            }`}
           >
             <Link href="/order">Order</Link>
           </Button>
           <button
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((p) => !p)}
-            className="grid h-9 w-9 place-items-center rounded-lg border border-border bg-white text-ink shadow-sm transition-all duration-200 hover:bg-secondary active:scale-[0.95]"
+            className={`grid h-9 w-9 place-items-center rounded-lg border shadow-sm transition-all duration-200 active:scale-[0.95] ${
+              scrolled
+                ? "border-border bg-white text-ink hover:bg-secondary"
+                : "border-white/20 bg-white/10 text-white hover:bg-white/20"
+            }`}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
