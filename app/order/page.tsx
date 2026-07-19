@@ -133,9 +133,9 @@ export default function OrderPage() {
 }
 
 const slideVariants = {
-  enter: (d: number) => ({ opacity: 0, x: d > 0 ? 40 : -40 }),
-  center: { opacity: 1, x: 0 },
-  exit: (d: number) => ({ opacity: 0, x: d > 0 ? -40 : 40 }),
+  enter: (d: number) => ({ opacity: 0, y: d > 0 ? 16 : -16 }),
+  center: { opacity: 1, y: 0 },
+  exit: (d: number) => ({ opacity: 0, y: d > 0 ? -16 : 16 }),
 };
 
 function OrderPageInner() {
@@ -216,7 +216,7 @@ function OrderPageInner() {
           </div>
 
           <div
-            className={`mt-12 grid gap-6 sm:gap-10 ${step === 5 ? "lg:grid-cols-[1fr_380px]" : "lg:grid-cols-1 max-w-3xl mx-auto"}`}
+            className={`mt-12 grid gap-6 sm:gap-10 ${step === 5 ? "lg:grid-cols-[1fr_380px]" : "max-w-3xl mx-auto"}`}
           >
             {/* Main form area */}
             <div className="min-w-0">
@@ -414,7 +414,7 @@ function OrderPageInner() {
                                     : "border-border hover:border-ink/20 hover:shadow-sm",
                                 )}
                               >
-                                <div className="flex items-start gap-4">
+                                <div className="flex min-w-0 items-start gap-4">
                                   <span
                                     className={cn(
                                       "mt-1 grid h-5 w-5 shrink-0 place-items-center rounded-full border-2 transition-colors",
@@ -423,7 +423,7 @@ function OrderPageInner() {
                                   >
                                     {active && <Check className="h-3 w-3" strokeWidth={3} />}
                                   </span>
-                                  <div>
+                                  <div className="min-w-0">
                                     <p className="font-display text-xl text-ink">
                                       {p.name}{" "}
                                       {p.popular && (
@@ -437,7 +437,7 @@ function OrderPageInner() {
                                     </p>
                                   </div>
                                 </div>
-                                <div className="flex items-baseline justify-end gap-2">
+                                <div className="flex shrink-0 items-baseline justify-end gap-2">
                                   <span className="font-display text-2xl text-ink">
                                     {p.priceLabel}
                                   </span>
