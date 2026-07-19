@@ -17,6 +17,7 @@ import {
   FileText,
   CalendarDays,
   Loader2,
+  PenLine,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,6 +29,7 @@ import { SiteFooter } from "@/components/site/Footer";
 import { PACKAGES, type Package } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { SignaturePad } from "@/components/ui/signature-pad";
 import { Elements, PaymentElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { getStripe } from "@/lib/stripe/client";
 
@@ -61,6 +63,8 @@ type FormState = {
   preferredDate: string;
   preferredWindow: "morning" | "afternoon" | "either";
   rush: boolean;
+  signature: string;
+  signatureConsent: boolean;
   nameOnCard: string;
   saveCard: boolean;
 };
@@ -87,6 +91,8 @@ function defaultForm(sp: { package?: "basic" | "premium" | "verified" }): FormSt
     preferredDate: "",
     preferredWindow: "either",
     rush: false,
+    signature: "",
+    signatureConsent: false,
     nameOnCard: "",
     saveCard: false,
   };
@@ -147,7 +153,8 @@ function OrderPageInner() {
 
   useEffect(() => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
+      const { signature: _sig, ...rest } = form;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
     } catch {
       /* ignore */
     }
@@ -580,18 +587,74 @@ function OrderPageInner() {
                               )}
                             </div>
                           </div>
+                          {form.signature && (
+                            <div className="mt-4 border-t pt-4">
+                              <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                                Signature
+                              </p>
+                              <img
+                                src={form.signature}
+                                alt="Customer signature"
+                                className="h-14 rounded-lg border border-border bg-white object-contain p-1"
+                              />
+                            </div>
+                          )}
                         </details>
 
-                        <div className="mt-6">
-                          <StripePaymentSection
-                            amount={total}
-                            currency="usd"
-                            packageId={form.packageId}
-                            packageName={pkg.name}
-                            email={form.email}
-                            name={`${form.firstName} ${form.lastName}`.trim()}
-                          />
+                        <div className="mt-6 rounded-2xl border border-border p-5 sm:p-6">
+                          <div className="flex items-center gap-2.5">
+                            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brass/10 text-brass">
+                              <PenLine className="h-4 w-4" />
+                            </span>
+                            <div>
+                              <h3 className="font-display text-lg text-ink">Digital signature</h3>
+                              <p className="text-xs text-muted-foreground">
+                                Sign to authorize this order and confirm accuracy.
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="mt-4">
+                            <SignaturePad
+                              value={form.signature}
+                              onChange={(v) => u("signature", v)}
+                              height={140}
+                            />
+                          </div>
+
+                          <label className="mt-4 flex cursor-pointer items-start gap-3 rounded-xl border border-border bg-secondary/30 p-4 transition-all hover:border-brass/40 hover:shadow-sm">
+                            <input
+                              type="checkbox"
+                              checked={form.signatureConsent}
+                              onChange={(e) => u("signatureConsent", e.target.checked)}
+                              className="mt-0.5 h-4 w-4 accent-[oklch(0.76_0.12_80)]"
+                            />
+                            <div className="flex-1 text-sm text-muted-foreground">
+                              I confirm that the information provided is accurate and I authorize
+                              Accurate Home Report to prepare this order. I understand that reports
+                              are non-refundable once preparation begins.
+                            </div>
+                          </label>
+
+                          {!form.signature && (
+                            <p className="mt-2 text-xs text-destructive">
+                              A signature is required to proceed with payment.
+                            </p>
+                          )}
                         </div>
+
+                        {form.signature && form.signatureConsent && (
+                          <div className="mt-6">
+                            <StripePaymentSection
+                              amount={total}
+                              currency="usd"
+                              packageId={form.packageId}
+                              packageName={pkg.name}
+                              email={form.email}
+                              name={`${form.firstName} ${form.lastName}`.trim()}
+                            />
+                          </div>
+                        )}
                       </>
                     )}
                   </motion.div>
