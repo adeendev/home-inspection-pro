@@ -61,7 +61,7 @@ export function Hero() {
         />
       </div>
 
-      <div className="container-x relative pt-20 pb-16 md:pt-28 md:pb-24">
+      <div className="container-x relative flex min-h-dvh flex-col justify-center pt-16 pb-12 md:min-h-0 md:block md:pt-28 md:pb-24">
         <div className="mx-auto max-w-3xl text-center">
           <motion.span
             {...fadeUp(0)}
@@ -86,7 +86,7 @@ export function Hero() {
 
           <motion.p
             {...fadeUp(0.24)}
-            className="mt-6 mx-auto max-w-xl text-sm text-cream/75 md:text-base"
+            className="mt-4 mx-auto max-w-xl text-sm text-cream/75 md:mt-6 md:text-base"
           >
             Comprehensive, homeowner-verified property reports—public records, trusted data sources,
             and your disclosures, prepared by experienced analysts into one professional PDF.
@@ -94,7 +94,7 @@ export function Hero() {
 
           <motion.div
             {...fadeUp(0.36)}
-            className="mt-7 flex flex-wrap items-center justify-center gap-3"
+            className="mt-5 flex flex-wrap items-center justify-center gap-3 md:mt-7"
           >
             <Button asChild size="lg" variant="brass">
               <Link href="/order">
@@ -109,7 +109,7 @@ export function Hero() {
 
           <motion.ul
             {...fadeUp(0.48)}
-            className="mt-8 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4 mx-auto"
+            className="mt-5 grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-2 sm:gap-3 md:mt-8 md:grid-cols-4 mx-auto"
           >
             {[
               { icon: Clock, label: "48hr – 3 day delivery" },
@@ -136,7 +136,7 @@ export function Hero() {
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: 0.6 }}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-cream/40 hover:text-cream/70 transition-colors"
+        className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-1.5 text-cream/40 hover:text-cream/70 transition-colors md:bottom-6"
         aria-label="Scroll down"
       >
         <span className="text-[11px] uppercase tracking-widest">Explore</span>
