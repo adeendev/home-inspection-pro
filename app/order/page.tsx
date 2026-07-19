@@ -221,25 +221,28 @@ function OrderPageInner() {
             {/* Main form area */}
             <div className="min-w-0">
               {/* Step indicator */}
-              <div className="mb-10 grid grid-cols-5 gap-2">
+              <div
+                className="mb-10 grid grid-cols-5 gap-1 sm:gap-2"
+                style={{ gridTemplateColumns: "repeat(5, minmax(0, 1fr))" }}
+              >
                 {STEPS.map((s) => {
                   const done = step > s.id;
                   const active = step === s.id;
                   return (
-                    <div key={s.id} className="flex flex-col items-center gap-1.5">
+                    <div key={s.id} className="flex flex-col items-center gap-1 sm:gap-1.5">
                       <div
                         className={cn(
-                          "grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-semibold transition-all sm:h-9 sm:w-9",
+                          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[0.65rem] font-semibold transition-all sm:h-8 sm:w-8 sm:text-xs",
                           done && "bg-brass text-ink",
                           active && "border-2 border-ink bg-white text-ink",
                           !done && !active && "border border-border bg-white text-muted-foreground",
                         )}
                       >
-                        {done ? <Check className="h-3.5 w-3.5" strokeWidth={3} /> : s.id}
+                        {done ? <Check className="h-3 w-3" strokeWidth={3} /> : s.id}
                       </div>
                       <span
                         className={cn(
-                          "hidden text-[0.6rem] uppercase tracking-widest transition-colors sm:block",
+                          "hidden text-[0.5rem] uppercase tracking-wider transition-colors sm:block sm:text-[0.6rem]",
                           active || done ? "text-ink/80" : "text-muted-foreground",
                         )}
                       >
