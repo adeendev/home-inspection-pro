@@ -64,9 +64,9 @@ export default function SamplePage() {
       <SiteHeader />
 
       <section className="relative gradient-ink text-cream">
-        <div className="container-x py-24">
+        <div className="container-x py-16 md:py-24">
           <span className="eyebrow">Sample Report</span>
-          <h1 className="mt-4 max-w-3xl font-display text-4xl text-cream text-balance md:text-6xl">
+          <h1 className="mt-4 max-w-3xl font-display text-3xl text-cream text-balance sm:text-4xl md:text-6xl">
             See exactly what arrives in your inbox.
           </h1>
           <p className="mt-5 max-w-2xl text-cream/75">
@@ -98,7 +98,7 @@ export default function SamplePage() {
               className="rounded-2xl border border-border bg-card p-6 transition hover:border-brass/40 hover:shadow-elegant"
             >
               <div className="flex items-baseline justify-between">
-                <span className="font-display text-2xl italic text-brass">
+                <span className="font-display text-xl italic text-brass md:text-2xl">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <span className="text-[0.65rem] uppercase tracking-widest text-muted-foreground">

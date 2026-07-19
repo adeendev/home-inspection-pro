@@ -79,7 +79,7 @@ export default function StatusPage() {
     <div className="bg-secondary/30">
       <SiteHeader />
       <div className="container-x py-20 md:py-28">
-        <div className="mx-auto max-w-2xl rounded-3xl border border-border bg-card p-8 text-center shadow-elegant md:p-14">
+        <div className="mx-auto max-w-2xl rounded-3xl border border-border bg-card p-6 text-center shadow-elegant sm:p-8 md:p-14">
           <div className={`mx-auto grid h-20 w-20 place-items-center rounded-full ${cfg.bg}`}>
             <Icon className={`h-10 w-10 ${cfg.tone}`} strokeWidth={1.5} />
           </div>
@@ -116,7 +116,7 @@ export default function StatusPage() {
                       navigator.clipboard.writeText(paymentIntent!);
                       toast.success("Payment ID copied");
                     }}
-                    className="inline-flex items-center gap-1 font-mono text-ink underline-offset-2 hover:underline"
+                    className="inline-flex items-center gap-1 font-mono text-ink underline-offset-2 hover:underline break-all"
                   >
                     {paymentIntent.slice(0, 20)}…
                     <Copy className="h-3 w-3" />

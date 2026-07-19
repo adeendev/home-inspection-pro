@@ -65,7 +65,7 @@ export function Hero() {
         <div className="mx-auto max-w-3xl text-center">
           <motion.span
             {...fadeUp(0)}
-            className="inline-flex items-center gap-2 rounded-full border border-cream/15 bg-cream/5 px-3 py-1.5 text-xs uppercase tracking-[0.22em] text-cream/85 backdrop-blur mx-auto"
+            className="inline-flex items-center gap-2 rounded-full border border-cream/15 bg-cream/5 px-3 py-1.5 text-xs uppercase tracking-[0.15em] text-cream/85 backdrop-blur mx-auto sm:tracking-[0.22em]"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-brass animate-pulse-soft" />
             Homeowner-Verified Reports
@@ -73,7 +73,7 @@ export function Hero() {
 
           <motion.h1
             {...fadeUp(0.12)}
-            className="mt-2 font-display text-[2.2rem] leading-[1.05] text-cream text-balance md:text-5xl lg:text-6xl"
+            className="mt-2 font-display text-3xl leading-[1.05] text-cream text-balance sm:text-[2.2rem] md:text-5xl lg:text-6xl"
           >
             Know your home&apos;s
             <br />
@@ -109,7 +109,7 @@ export function Hero() {
 
           <motion.ul
             {...fadeUp(0.48)}
-            className="mt-8 grid max-w-2xl grid-cols-2 gap-3 sm:grid-cols-4 mx-auto"
+            className="mt-8 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4 mx-auto"
           >
             {[
               { icon: Clock, label: "48hr – 3 day delivery" },

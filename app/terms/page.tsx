@@ -15,7 +15,7 @@ export default function TermsPage() {
           &larr; Back to home
         </Link>
 
-        <h1 className="mt-6 font-display text-4xl text-ink text-balance md:text-5xl">
+        <h1 className="mt-6 font-display text-3xl text-ink text-balance sm:text-4xl md:text-5xl">
           Terms of Service
         </h1>
         <p className="mt-3 text-sm text-muted-foreground">Last updated: July 18, 2026</p>

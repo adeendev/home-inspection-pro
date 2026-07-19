@@ -32,7 +32,9 @@ export function ServiceArea() {
           />
           <div className="absolute inset-0 bg-gradient-to-tr from-ink/60 via-transparent to-transparent" />
           <div className="absolute bottom-6 left-6 right-6 rounded-2xl glass p-5">
-            <p className="font-display text-2xl text-ink">Verified visits in 14+ metro areas</p>
+            <p className="font-display text-lg text-ink md:text-2xl">
+              Verified visits in 14+ metro areas
+            </p>
             <p className="mt-1 text-sm text-muted-foreground">
               Documentation reports available nationwide.
             </p>
@@ -52,7 +54,7 @@ export function ServiceArea() {
             Don't see your area? Our analyst-prepared Basic and Premium documentation reports are
             available anywhere in the United States.
           </p>
-          <ul className="mt-8 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3">
+          <ul className="mt-8 grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2 md:grid-cols-3">
             {SERVICE_AREAS.map((a, i) => (
               <motion.li
                 key={a}

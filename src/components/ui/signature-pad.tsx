@@ -124,9 +124,9 @@ export function SignaturePad({
         <button
           type="button"
           onClick={clear}
-          className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md border border-border bg-white/90 px-2 py-1 text-xs text-muted-foreground shadow-sm backdrop-blur transition-colors hover:bg-secondary hover:text-ink"
+          className="absolute right-2 top-2 inline-flex items-center gap-1 rounded-md border border-border bg-white/90 px-2 py-1 text-xs text-muted-foreground shadow-sm backdrop-blur transition-colors hover:bg-secondary hover:text-ink sm:px-2"
         >
-          <Eraser className="h-3 w-3" /> Clear
+          <Eraser className="h-3 w-3" /> <span className="hidden sm:inline">Clear</span>
         </button>
       </div>
     </div>

@@ -50,7 +50,7 @@ export function SiteHeader() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 overflow-hidden transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         !transparent
           ? "bg-white/90 shadow-[0_1px_0_rgba(0,0,0,0.06),0_8px_30px_-8px_rgba(0,0,0,0.12)] backdrop-blur-xl"
           : "bg-transparent"

@@ -71,15 +71,15 @@ export function Testimonials() {
           <AnimatePresence mode="wait">
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -40 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
             >
               <p className="font-display text-xl leading-snug text-ink text-balance md:text-2xl lg:text-3xl">
                 &ldquo;{t.quote}&rdquo;
               </p>
-              <div className="mt-8 flex items-center justify-between border-t pt-6">
+              <div className="mt-8 flex flex-col gap-4 border-t pt-6 sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-3">
                   <span className="grid h-10 w-10 place-items-center rounded-full bg-brass/15 font-display text-sm font-bold text-brass">
                     {t.name
