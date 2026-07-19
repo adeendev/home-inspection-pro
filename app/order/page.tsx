@@ -194,10 +194,10 @@ function OrderPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30 overflow-x-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30">
       <SiteHeader />
 
-      <div className="container-x pt-24 pb-32 md:pt-36 md:pb-40">
+      <div className="px-4 pt-24 pb-32 md:px-8 md:pt-36 md:pb-40">
         <div className="mx-auto max-w-5xl">
           <Link
             href="/"
@@ -219,7 +219,7 @@ function OrderPageInner() {
             className={`mt-12 grid gap-10 ${step === 5 ? "lg:grid-cols-[1fr_380px]" : "lg:grid-cols-1 max-w-3xl mx-auto"}`}
           >
             {/* Main form area */}
-            <div>
+            <div className="min-w-0">
               {/* Step indicator */}
               <div className="mb-10 flex items-center justify-between gap-2 sm:gap-3 overflow-x-auto">
                 {STEPS.map((s) => {
@@ -250,7 +250,7 @@ function OrderPageInner() {
                 })}
               </div>
 
-              <div className="overflow-hidden rounded-3xl border border-border bg-white p-6 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)] md:p-10">
+              <div className="rounded-3xl border border-border bg-white p-5 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)] sm:p-6 md:p-10">
                 <AnimatePresence mode="wait" custom={dir}>
                   <motion.div
                     key={step}
@@ -685,7 +685,7 @@ function OrderPageInner() {
 
             {/* Summary sidebar — only on payment step */}
             {step === 5 && (
-              <aside className="lg:sticky lg:top-28 lg:self-start">
+              <aside className="lg:sticky lg:top-28 lg:self-start min-w-0">
                 <div className="rounded-3xl border border-border bg-white p-6 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)]">
                   <p className="text-xs uppercase tracking-widest text-muted-foreground">
                     Order summary
