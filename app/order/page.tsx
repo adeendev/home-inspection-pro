@@ -194,7 +194,7 @@ function OrderPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30 overflow-x-hidden w-full max-w-full">
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30">
       <SiteHeader />
 
       <div className="px-4 pt-24 pb-32 md:px-8 md:pt-36 md:pb-40">
