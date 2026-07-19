@@ -221,12 +221,12 @@ function OrderPageInner() {
             {/* Main form area */}
             <div className="min-w-0">
               {/* Step indicator */}
-              <div className="mb-10 flex items-center justify-between gap-2 sm:gap-3 overflow-x-auto">
+              <div className="mb-10 grid grid-cols-5 gap-2">
                 {STEPS.map((s) => {
                   const done = step > s.id;
                   const active = step === s.id;
                   return (
-                    <div key={s.id} className="flex flex-col items-center gap-1.5 min-w-0 shrink-0">
+                    <div key={s.id} className="flex flex-col items-center gap-1.5">
                       <div
                         className={cn(
                           "grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-semibold transition-all sm:h-9 sm:w-9",
@@ -239,7 +239,7 @@ function OrderPageInner() {
                       </div>
                       <span
                         className={cn(
-                          "text-[0.55rem] uppercase tracking-widest transition-colors sm:text-[0.6rem] whitespace-nowrap",
+                          "hidden text-[0.6rem] uppercase tracking-widest transition-colors sm:block",
                           active || done ? "text-ink/80" : "text-muted-foreground",
                         )}
                       >
