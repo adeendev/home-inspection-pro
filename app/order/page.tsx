@@ -194,11 +194,11 @@ function OrderPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30">
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30 overflow-x-hidden w-full max-w-full">
       <SiteHeader />
 
       <div className="px-4 pt-24 pb-32 md:px-8 md:pt-36 md:pb-40">
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-full lg:max-w-5xl">
           <Link
             href="/"
             className="inline-flex items-center gap-1.5 text-xs uppercase tracking-widest text-muted-foreground hover:text-ink transition-colors"
@@ -206,17 +206,17 @@ function OrderPageInner() {
             <ArrowLeft className="h-3 w-3" /> Back to home
           </Link>
 
-          <div className="mt-6 flex items-center justify-between">
-            <div>
-              <h1 className="font-display text-4xl text-ink md:text-5xl">Order your report</h1>
-              <p className="mt-2 text-muted-foreground">
-                5 simple steps. Encrypted checkout. Production begins immediately after payment.
-              </p>
-            </div>
+          <div className="mt-6">
+            <h1 className="font-display text-3xl text-ink sm:text-4xl md:text-5xl">
+              Order your report
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              5 simple steps. Encrypted checkout. Production begins immediately after payment.
+            </p>
           </div>
 
           <div
-            className={`mt-12 grid gap-10 ${step === 5 ? "lg:grid-cols-[1fr_380px]" : "lg:grid-cols-1 max-w-3xl mx-auto"}`}
+            className={`mt-12 grid gap-6 sm:gap-10 ${step === 5 ? "lg:grid-cols-[1fr_380px]" : "lg:grid-cols-1 max-w-3xl mx-auto"}`}
           >
             {/* Main form area */}
             <div className="min-w-0">
@@ -250,7 +250,7 @@ function OrderPageInner() {
                 })}
               </div>
 
-              <div className="rounded-3xl border border-border bg-white p-5 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)] sm:p-6 md:p-10">
+              <div className="overflow-hidden rounded-3xl border border-border bg-white p-5 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)] sm:p-6 md:p-10">
                 <AnimatePresence mode="wait" custom={dir}>
                   <motion.div
                     key={step}
@@ -601,7 +601,7 @@ function OrderPageInner() {
                           )}
                         </details>
 
-                        <div className="mt-6 rounded-2xl border border-border p-5 sm:p-6">
+                        <div className="mt-6 rounded-2xl border border-border p-5 sm:p-6 max-w-full overflow-hidden">
                           <div className="flex items-center gap-2.5">
                             <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-brass/10 text-brass">
                               <PenLine className="h-4 w-4" />
@@ -644,7 +644,7 @@ function OrderPageInner() {
                         </div>
 
                         {form.signature && form.signatureConsent && (
-                          <div className="mt-6">
+                          <div className="mt-6 max-w-full overflow-hidden">
                             <StripePaymentSection
                               amount={total}
                               currency="usd"
