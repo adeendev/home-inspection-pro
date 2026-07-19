@@ -187,7 +187,7 @@ function OrderPageInner() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30">
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30 overflow-x-hidden">
       <SiteHeader />
 
       <div className="container-x pt-24 pb-32 md:pt-36 md:pb-40">
@@ -214,15 +214,15 @@ function OrderPageInner() {
             {/* Main form area */}
             <div>
               {/* Step indicator */}
-              <div className="mb-10 flex items-center justify-between gap-3">
+              <div className="mb-10 flex items-center justify-between gap-2 sm:gap-3 overflow-x-auto">
                 {STEPS.map((s) => {
                   const done = step > s.id;
                   const active = step === s.id;
                   return (
-                    <div key={s.id} className="flex flex-col items-center gap-1.5">
+                    <div key={s.id} className="flex flex-col items-center gap-1.5 min-w-0 shrink-0">
                       <div
                         className={cn(
-                          "grid h-9 w-9 shrink-0 place-items-center rounded-full text-xs font-semibold transition-all",
+                          "grid h-8 w-8 shrink-0 place-items-center rounded-full text-xs font-semibold transition-all sm:h-9 sm:w-9",
                           done && "bg-brass text-ink",
                           active && "border-2 border-ink bg-white text-ink",
                           !done && !active && "border border-border bg-white text-muted-foreground",
@@ -232,7 +232,7 @@ function OrderPageInner() {
                       </div>
                       <span
                         className={cn(
-                          "text-[0.6rem] uppercase tracking-widest transition-colors",
+                          "text-[0.55rem] uppercase tracking-widest transition-colors sm:text-[0.6rem] whitespace-nowrap",
                           active || done ? "text-ink/80" : "text-muted-foreground",
                         )}
                       >
@@ -243,7 +243,7 @@ function OrderPageInner() {
                 })}
               </div>
 
-              <div className="rounded-3xl border border-border bg-white p-6 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)] md:p-10">
+              <div className="overflow-hidden rounded-3xl border border-border bg-white p-6 shadow-[0_4px_20px_-12px_rgba(0,0,0,0.15),0_1px_3px_rgba(0,0,0,0.04)] md:p-10">
                 <AnimatePresence mode="wait" custom={dir}>
                   <motion.div
                     key={step}
@@ -806,54 +806,56 @@ function StripePaymentSection({
       )}
 
       {clientSecret && (
-        <Elements
-          stripe={stripePromise}
-          options={{
-            clientSecret,
-            appearance: {
-              theme: "stripe",
-              variables: {
-                colorPrimary: "#1a2236",
-                colorBackground: "#ffffff",
-                colorText: "#1a2236",
-                colorDanger: "#dc2626",
-                fontFamily: "Inter, system-ui, sans-serif",
-                borderRadius: "12px",
-                spacingUnit: "4px",
-              },
-              rules: {
-                ".Input": {
-                  border: "1px solid #e2e8f0",
-                  padding: "12px",
-                  fontSize: "14px",
+        <div className="min-w-0">
+          <Elements
+            stripe={stripePromise}
+            options={{
+              clientSecret,
+              appearance: {
+                theme: "stripe",
+                variables: {
+                  colorPrimary: "#1a2236",
+                  colorBackground: "#ffffff",
+                  colorText: "#1a2236",
+                  colorDanger: "#dc2626",
+                  fontFamily: "Inter, system-ui, sans-serif",
                   borderRadius: "12px",
+                  spacingUnit: "4px",
                 },
-                ".Input:focus": {
-                  borderColor: "#1a2236",
-                  boxShadow: "0 0 0 1px #1a2236",
-                },
-                ".Label": {
-                  fontSize: "12px",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.05em",
-                  color: "#6b7280",
-                  fontWeight: "500",
-                },
-                ".Tab": {
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "12px",
-                  padding: "12px",
-                },
-                ".Tab--selected": {
-                  borderColor: "#1a2236",
-                  boxShadow: "0 0 0 1px #1a2236",
+                rules: {
+                  ".Input": {
+                    border: "1px solid #e2e8f0",
+                    padding: "12px",
+                    fontSize: "14px",
+                    borderRadius: "12px",
+                  },
+                  ".Input:focus": {
+                    borderColor: "#1a2236",
+                    boxShadow: "0 0 0 1px #1a2236",
+                  },
+                  ".Label": {
+                    fontSize: "12px",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    color: "#6b7280",
+                    fontWeight: "500",
+                  },
+                  ".Tab": {
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "12px",
+                    padding: "12px",
+                  },
+                  ".Tab--selected": {
+                    borderColor: "#1a2236",
+                    boxShadow: "0 0 0 1px #1a2236",
+                  },
                 },
               },
-            },
-          }}
-        >
-          <PaymentForm amount={amount} packageId={packageId} />
-        </Elements>
+            }}
+          >
+            <PaymentForm amount={amount} packageId={packageId} />
+          </Elements>
+        </div>
       )}
     </section>
   );

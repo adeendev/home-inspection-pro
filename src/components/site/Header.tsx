@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { X, Menu, Home } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
@@ -19,8 +20,11 @@ const NAV_DESKTOP = NAV.filter((i) => !["Home"].includes(i.label));
 const BP = 1024;
 
 export function SiteHeader() {
+  const pathname = usePathname();
+  const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const transparent = isHome && !scrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -47,7 +51,7 @@ export function SiteHeader() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
+        !transparent
           ? "bg-white/90 shadow-[0_1px_0_rgba(0,0,0,0.06),0_8px_30px_-8px_rgba(0,0,0,0.12)] backdrop-blur-xl"
           : "bg-transparent"
       }`}
@@ -56,7 +60,9 @@ export function SiteHeader() {
         <Link href="/" className="group flex items-center gap-2.5 shrink-0">
           <span
             className={`grid h-9 w-9 place-items-center rounded-lg shadow-[0_2px_8px_-2px_rgba(26,34,54,0.3)] transition-all duration-500 group-hover:shadow-[0_4px_14px_-2px_rgba(26,34,54,0.4)] ${
-              scrolled ? "gradient-ink text-cream" : "bg-white/15 text-white ring-1 ring-white/20"
+              !transparent
+                ? "gradient-ink text-cream"
+                : "bg-white/15 text-white ring-1 ring-white/20"
             }`}
           >
             <span className="font-display text-lg leading-none">A</span>
@@ -64,11 +70,11 @@ export function SiteHeader() {
           <div className="hidden sm:block">
             <span
               className={`font-display text-lg tracking-tight transition-colors duration-500 ${
-                scrolled ? "text-ink" : "text-white"
+                !transparent ? "text-ink" : "text-white"
               }`}
             >
               Accurate{" "}
-              <span className={scrolled ? "text-muted-foreground" : "text-white/60"}>
+              <span className={!transparent ? "text-muted-foreground" : "text-white/60"}>
                 Home Report
               </span>
             </span>
@@ -81,7 +87,7 @@ export function SiteHeader() {
               key={i.href}
               href={i.href}
               className={`rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                scrolled
+                !transparent
                   ? "text-ink/70 hover:bg-black/5 hover:text-ink"
                   : "text-white/70 hover:bg-white/10 hover:text-white"
               }`}
@@ -96,7 +102,7 @@ export function SiteHeader() {
             asChild
             size="sm"
             className={`shadow-[0_2px_10px_-3px_rgba(26,34,54,0.3)] transition-all duration-200 active:scale-[0.97] ${
-              scrolled
+              !transparent
                 ? "bg-ink text-cream hover:bg-ink-soft hover:shadow-[0_4px_16px_-4px_rgba(26,34,54,0.35)]"
                 : "bg-white/15 text-white hover:bg-white/25 ring-1 ring-white/20"
             }`}
@@ -110,7 +116,7 @@ export function SiteHeader() {
             asChild
             size="sm"
             className={`h-9 shadow-[0_2px_10px_-3px_rgba(26,34,54,0.3)] active:scale-[0.97] ${
-              scrolled ? "bg-ink text-cream" : "bg-white/15 text-white ring-1 ring-white/20"
+              !transparent ? "bg-ink text-cream" : "bg-white/15 text-white ring-1 ring-white/20"
             }`}
           >
             <Link href="/order">Order</Link>
@@ -119,7 +125,7 @@ export function SiteHeader() {
             aria-label={open ? "Close menu" : "Open menu"}
             onClick={() => setOpen((p) => !p)}
             className={`grid h-9 w-9 place-items-center rounded-lg border shadow-sm transition-all duration-200 active:scale-[0.95] ${
-              scrolled
+              !transparent
                 ? "border-border bg-white text-ink hover:bg-secondary"
                 : "border-white/20 bg-white/10 text-white hover:bg-white/20"
             }`}
