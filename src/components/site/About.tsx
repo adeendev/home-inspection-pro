@@ -31,8 +31,8 @@ export function About() {
       <div className="grid items-center gap-10 md:gap-14 md:grid-cols-2">
         {/* Left: copy */}
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
@@ -51,8 +51,8 @@ export function About() {
             {CHECKS.map((t, i) => (
               <motion.li
                 key={t}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.1 + i * 0.08 }}
                 className="flex items-start gap-3 rounded-xl border border-border bg-card px-4 py-3 text-sm text-ink/85 shadow-[0_1px_3px_rgba(0,0,0,0.04)] transition-all duration-300 hover:border-brass/40 hover:shadow-[0_8px_24px_-8px_rgba(0,0,0,0.1)]"
@@ -68,8 +68,8 @@ export function About() {
 
         {/* Right: image + stat badge */}
         <motion.div
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
           className="relative"

@@ -47,8 +47,8 @@ export function Contact() {
     >
       <div className="grid gap-10 md:gap-14 lg:grid-cols-[1fr_1.1fr]">
         <motion.div
-          initial={{ opacity: 0, x: -30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
@@ -62,8 +62,8 @@ export function Contact() {
           </p>
           <ul className="mt-8 space-y-4 text-sm">
             <motion.li
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.1 }}
               className="flex items-start gap-3"
@@ -77,8 +77,8 @@ export function Contact() {
               </div>
             </motion.li>
             <motion.li
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.18 }}
               className="flex items-start gap-3"
@@ -92,8 +92,8 @@ export function Contact() {
               </div>
             </motion.li>
             <motion.li
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.4, delay: 0.26 }}
               className="flex items-start gap-3"
@@ -110,8 +110,8 @@ export function Contact() {
         </motion.div>
 
         <motion.form
-          initial={{ opacity: 0, x: 30 }}
-          whileInView={{ opacity: 1, x: 0 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
           onSubmit={(e) => {
