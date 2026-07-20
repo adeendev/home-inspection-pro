@@ -14,11 +14,11 @@ import { FinalCTA } from "@/components/site/FinalCTA";
 import { FAQS, PACKAGES, SITE } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Accurate Home Report — Homeowner-Verified Property Reports",
+  title: "Accurate Home Report | Premium Property Intelligence",
   description:
     "Comprehensive homeowner-verified property reports combining public records, trusted data, and your disclosures—prepared by analysts into one professional PDF. Delivery in 48 hrs – 3 business days.",
   openGraph: {
-    title: "Accurate Home Report — Homeowner-Verified Property Reports",
+    title: "Accurate Home Report | Premium Property Intelligence",
     description: "Professional, analyst-prepared property documentation reports. Order in minutes.",
     type: "website",
     url: "/",

@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { X, Menu, Home } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
+import { LogoFull } from "@/components/ui/Logo";
 
 const NAV = [
   { label: "Home", href: "/" },
@@ -58,27 +59,7 @@ export function SiteHeader() {
     >
       <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-5 lg:h-16 lg:px-8">
         <Link href="/" className="group flex items-center gap-2.5 shrink-0">
-          <span
-            className={`grid h-9 w-9 place-items-center rounded-lg shadow-[0_2px_8px_-2px_rgba(26,34,54,0.3)] transition-all duration-500 group-hover:shadow-[0_4px_14px_-2px_rgba(26,34,54,0.4)] ${
-              !transparent
-                ? "gradient-ink text-cream"
-                : "bg-white/15 text-white ring-1 ring-white/20"
-            }`}
-          >
-            <span className="font-display text-lg leading-none">A</span>
-          </span>
-          <div className="hidden sm:block">
-            <span
-              className={`font-display text-lg tracking-tight transition-colors duration-500 ${
-                !transparent ? "text-ink" : "text-white"
-              }`}
-            >
-              Accurate{" "}
-              <span className={!transparent ? "text-muted-foreground" : "text-white/60"}>
-                Home Report
-              </span>
-            </span>
-          </div>
+          <LogoFull transparent={transparent} />
         </Link>
 
         <nav className="hidden items-center gap-0.5 lg:flex">

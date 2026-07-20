@@ -23,10 +23,15 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Accurate Home Report — Homeowner-Verified Property Reports",
+  title: "Accurate Home Report | Premium Property Intelligence",
   description:
     "Comprehensive homeowner-verified property reports combining public records, trusted data sources, and your disclosures—prepared by analysts into one professional PDF.",
   authors: [{ name: "Accurate Home Report" }],
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
+  },
   openGraph: {
     siteName: "Accurate Home Report",
     type: "website",

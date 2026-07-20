@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { SITE } from "@/lib/site";
+import { LogoFull } from "@/components/ui/Logo";
 
 export function SiteFooter() {
   return (
@@ -7,12 +8,7 @@ export function SiteFooter() {
       <div className="container-x py-14 md:py-20">
         <div className="grid gap-8 md:grid-cols-4 md:gap-12">
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2.5">
-              <span className="grid h-9 w-9 place-items-center rounded-md border border-cream/20 text-cream">
-                <span className="font-display text-lg leading-none">A</span>
-              </span>
-              <span className="font-display text-lg text-cream">Accurate Home Report</span>
-            </div>
+            <LogoFull transparent={true} />
             <p className="mt-4 max-w-md text-sm leading-relaxed text-cream/65">
               A homeowner-verified property reporting service. Public records, third-party data, and
               your disclosures—assembled by analysts into one professional report.
