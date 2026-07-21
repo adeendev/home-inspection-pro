@@ -78,6 +78,7 @@
     "eslint-plugin-prettier": "^5.2.6",
     "globals": "^15.15.0",
     "prettier": "^3.7.3",
+    "drizzle-kit": "^0.30.5",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.56.1"
   }
