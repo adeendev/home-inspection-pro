@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { db } from "@/lib/db";
+import { orders, processedWebhookEvents } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { getServerConfig } from "@/lib/config.server";
+import { sendOrderConfirmationEmail } from "@/lib/email";
 
 export async function POST(request: Request) {
   const config = getServerConfig();
@@ -26,18 +30,36 @@ export async function POST(request: Request) {
     return new NextResponse(`Invalid signature: ${(err as Error).message}`, { status: 400 });
   }
 
-  switch (event.type) {
-    case "payment_intent.succeeded": {
-      const pi = event.data.object as Stripe.PaymentIntent;
-      console.log("Payment succeeded:", pi.id, pi.metadata);
-      break;
-    }
-    case "payment_intent.payment_failed": {
-      const pi = event.data.object as Stripe.PaymentIntent;
-      console.log("Payment failed:", pi.id, pi.last_payment_error?.message);
-      break;
+  const [existing] = await db
+    .select()
+    .from(processedWebhookEvents)
+    .where(eq(processedWebhookEvents.stripeEventId, event.id));
+  if (existing) {
+    return NextResponse.json({ received: true, deduped: true });
+  }
+
+  if (event.type === "payment_intent.succeeded") {
+    const intent = event.data.object as Stripe.PaymentIntent;
+    const orderId = intent.metadata.orderId;
+
+    if (orderId) {
+      const [order] = await db.select().from(orders).where(eq(orders.id, orderId));
+      if (order && order.status === "pending") {
+        await db
+          .update(orders)
+          .set({ status: "paid", updatedAt: new Date() })
+          .where(eq(orders.id, orderId));
+
+        try {
+          await sendOrderConfirmationEmail(order.customerEmail, order.accessToken, order.id);
+        } catch (emailErr) {
+          console.error("[webhook] Failed to send confirmation email:", emailErr);
+        }
+      }
     }
   }
+
+  await db.insert(processedWebhookEvents).values({ stripeEventId: event.id });
 
   return new NextResponse("OK", { status: 200 });
 }

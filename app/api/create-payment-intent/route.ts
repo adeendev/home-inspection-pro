@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { db } from "@/lib/db";
+import { orders } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
 import { getServerConfig } from "@/lib/config.server";
 
 const RATE_LIMIT = new Map<string, { count: number; resetAt: number }>();
@@ -18,12 +21,6 @@ function checkRateLimit(ip: string, limit = 10, windowMs = 300_000) {
   return true;
 }
 
-const VALID_AMOUNTS: Record<string, number> = {
-  basic: 399,
-  premium: 899,
-  verified: 2500,
-};
-
 export async function POST(request: Request) {
   const ip =
     request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "unknown";
@@ -36,22 +33,19 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = await request.json();
-    const { amount, currency, packageId, packageName, customerEmail, customerName } = body;
+    const { orderId } = await request.json();
 
-    if (!amount || typeof amount !== "number" || amount <= 0) {
-      return NextResponse.json({ error: "Invalid amount" }, { status: 400 });
-    }
-    if (!packageId || !packageName) {
-      return NextResponse.json({ error: "Missing package info" }, { status: 400 });
+    if (!orderId || typeof orderId !== "string") {
+      return NextResponse.json({ error: "Missing orderId" }, { status: 400 });
     }
 
-    const expectedAmount = VALID_AMOUNTS[packageId];
-    if (!expectedAmount) {
-      return NextResponse.json({ error: "Invalid package" }, { status: 400 });
+    const [order] = await db.select().from(orders).where(eq(orders.id, orderId));
+    if (!order) {
+      return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
-    if (amount !== expectedAmount) {
-      return NextResponse.json({ error: "Amount mismatch" }, { status: 400 });
+
+    if (order.status !== "pending") {
+      return NextResponse.json({ error: "Order is not in pending status" }, { status: 400 });
     }
 
     const config = getServerConfig();
@@ -64,16 +58,19 @@ export async function POST(request: Request) {
     });
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100),
-      currency: currency ?? "usd",
-      metadata: { packageId, packageName },
-      receipt_email: customerEmail,
-      ...(customerName ? { description: `Report order — ${customerName}` } : {}),
+      amount: order.amountCents,
+      currency: "usd",
+      metadata: { orderId: order.id },
     });
+
+    await db
+      .update(orders)
+      .set({ stripePaymentIntentId: paymentIntent.id, updatedAt: new Date() })
+      .where(eq(orders.id, orderId));
 
     return NextResponse.json({ clientSecret: paymentIntent.client_secret });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Internal server error";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("[create-payment-intent]", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

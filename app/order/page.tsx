@@ -74,22 +74,22 @@ const STORAGE_KEY = "order-form-state";
 
 function defaultForm(sp: { package?: "basic" | "premium" | "verified" }): FormState {
   return {
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    address2: "",
-    city: "",
-    state: "",
-    zip: "",
-    yearBuilt: "",
-    sqft: "",
-    ownershipType: "",
-    notes: "",
+    firstName: "John",
+    lastName: "Smith",
+    email: "john.smith@example.com",
+    phone: "(512) 555-0198",
+    address: "742 Evergreen Terrace",
+    address2: "Apt 4B",
+    city: "Austin",
+    state: "TX",
+    zip: "78701",
+    yearBuilt: "2005",
+    sqft: "2400",
+    ownershipType: "owner",
+    notes: "Test order — mock data for development.",
     packageId: sp.package ?? "premium",
-    preferredDate: "",
-    preferredWindow: "either",
+    preferredDate: new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
+    preferredWindow: "morning",
     rush: false,
     signature: "",
     signatureConsent: false,
@@ -148,6 +148,8 @@ function OrderPageInner() {
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<FormState>(() => loadPersistedForm(sp));
   const [dir, setDir] = useState(1);
+  const [orderId, setOrderId] = useState<string | null>(null);
+  const [creatingOrder, setCreatingOrder] = useState(false);
   const u = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
 
@@ -160,6 +162,41 @@ function OrderPageInner() {
     }
   }, [form]);
 
+  useEffect(() => {
+    if (step === 5 && !orderId && !creatingOrder) {
+      setCreatingOrder(true);
+      fetch("/api/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          packageTier: form.packageId,
+          rushRequested: form.rush,
+          customerEmail: form.email,
+          customerName: `${form.firstName} ${form.lastName}`.trim(),
+          wizardData: {
+            address: form.address,
+            address2: form.address2,
+            city: form.city,
+            state: form.state,
+            zip: form.zip,
+            yearBuilt: form.yearBuilt,
+            sqft: form.sqft,
+            ownershipType: form.ownershipType,
+            notes: form.notes,
+            preferredDate: form.preferredDate,
+            preferredWindow: form.preferredWindow,
+          },
+        }),
+      })
+        .then((r) => r.json())
+        .then((res) => {
+          if (res.orderId) setOrderId(res.orderId);
+          else toast.error(res.error || "Failed to create order");
+        })
+        .catch(() => toast.error("Failed to create order"));
+    }
+  }, [step, orderId, creatingOrder, form]);
+
   const pkg = useMemo(() => PACKAGES.find((p) => p.id === form.packageId)!, [form.packageId]);
   const subtotal = pkg.price;
   const rush = form.rush ? RUSH_FEE : 0;
@@ -169,11 +206,20 @@ function OrderPageInner() {
   const valid = (s: number) => {
     if (s === 1)
       return (
-        form.firstName && form.lastName && /.+@.+\..+/.test(form.email) && form.phone.length >= 7
+        form.firstName.trim().length >= 1 &&
+        form.lastName.trim().length >= 1 &&
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+        /^\+?[\d\s\-().]{7,15}$/.test(form.phone)
       );
     if (s === 2) return !!form.packageId;
     if (s === 3)
-      return form.address && form.city && form.state && form.zip.length >= 5 && form.ownershipType;
+      return (
+        form.address.trim().length >= 3 &&
+        form.city.trim().length >= 2 &&
+        /^[A-Z]{2}$/.test(form.state) &&
+        /^\d{5}(-\d{4})?$/.test(form.zip) &&
+        form.ownershipType
+      );
     if (s === 4) return !!form.preferredDate;
     if (s === 5) return true;
     return true;
@@ -274,14 +320,16 @@ function OrderPageInner() {
                           <Field label="First name">
                             <Input
                               value={form.firstName}
-                              onChange={(e) => u("firstName", e.target.value)}
+                              onChange={(e) => u("firstName", e.target.value.slice(0, 50))}
+                              maxLength={50}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
                           </Field>
                           <Field label="Last name">
                             <Input
                               value={form.lastName}
-                              onChange={(e) => u("lastName", e.target.value)}
+                              onChange={(e) => u("lastName", e.target.value.slice(0, 50))}
+                              maxLength={50}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
                           </Field>
@@ -289,17 +337,31 @@ function OrderPageInner() {
                             <Input
                               type="email"
                               value={form.email}
-                              onChange={(e) => u("email", e.target.value)}
+                              onChange={(e) => u("email", e.target.value.slice(0, 100))}
+                              maxLength={100}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
+                            {form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) && (
+                              <p className="mt-1 text-xs text-destructive">Enter a valid email</p>
+                            )}
                           </Field>
                           <Field label="Phone" className="sm:col-span-2">
                             <Input
+                              type="tel"
                               value={form.phone}
-                              onChange={(e) => u("phone", e.target.value)}
+                              onChange={(e) => {
+                                const v = e.target.value.replace(/[^\d+\-() ]/g, "");
+                                u("phone", v);
+                              }}
                               placeholder="(555) 555-0123"
+                              maxLength={16}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
+                            {form.phone && !/^\+?[\d\s\-().]{7,15}$/.test(form.phone) && (
+                              <p className="mt-1 text-xs text-destructive">
+                                Enter a valid phone number (7-15 digits)
+                              </p>
+                            )}
                           </Field>
                         </div>
                       </section>
@@ -336,25 +398,51 @@ function OrderPageInner() {
                           <Field label="State" className="sm:col-span-1">
                             <Input
                               value={form.state}
-                              onChange={(e) => u("state", e.target.value.toUpperCase())}
+                              onChange={(e) => {
+                                const v = e.target.value.replace(/[^a-zA-Z]/g, "").toUpperCase();
+                                u("state", v);
+                              }}
+                              placeholder="TX"
                               maxLength={2}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
+                            {form.state && !/^[A-Z]{2}$/.test(form.state) && (
+                              <p className="mt-1 text-xs text-destructive">2-letter code</p>
+                            )}
                           </Field>
                           <Field label="ZIP" className="sm:col-span-1">
                             <Input
                               value={form.zip}
-                              onChange={(e) => u("zip", e.target.value)}
+                              onChange={(e) => {
+                                const v = e.target.value.replace(/[^\d-]/g, "");
+                                u("zip", v);
+                              }}
+                              placeholder="78701"
+                              maxLength={10}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
+                            {form.zip && !/^\d{5}(-\d{4})?$/.test(form.zip) && (
+                              <p className="mt-1 text-xs text-destructive">5-digit ZIP</p>
+                            )}
                           </Field>
                           <Field label="Year built (optional)" className="sm:col-span-3">
                             <Input
                               value={form.yearBuilt}
-                              onChange={(e) => u("yearBuilt", e.target.value)}
+                              onChange={(e) => {
+                                const v = e.target.value.replace(/\D/g, "").slice(0, 4);
+                                u("yearBuilt", v);
+                              }}
                               placeholder="e.g. 1998"
+                              maxLength={4}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
+                            {form.yearBuilt &&
+                              (Number(form.yearBuilt) < 1800 ||
+                                Number(form.yearBuilt) > new Date().getFullYear()) && (
+                                <p className="mt-1 text-xs text-destructive">
+                                  Year 1800–{new Date().getFullYear()}
+                                </p>
+                              )}
                           </Field>
                           <Field
                             label="Approx. square footage (optional)"
@@ -362,8 +450,12 @@ function OrderPageInner() {
                           >
                             <Input
                               value={form.sqft}
-                              onChange={(e) => u("sqft", e.target.value)}
-                              placeholder="e.g. 2,400"
+                              onChange={(e) => {
+                                const v = e.target.value.replace(/[^\d,]/g, "");
+                                u("sqft", v);
+                              }}
+                              placeholder="e.g. 2400"
+                              maxLength={10}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
                             />
                           </Field>
@@ -494,12 +586,19 @@ function OrderPageInner() {
                               className="mt-2 grid grid-cols-3 gap-2"
                             >
                               {(["morning", "afternoon", "either"] as const).map((w) => (
-                                <button
+                                <div
                                   key={w}
-                                  type="button"
+                                  role="button"
+                                  tabIndex={0}
                                   onClick={() => u("preferredWindow", w)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") {
+                                      e.preventDefault();
+                                      u("preferredWindow", w);
+                                    }
+                                  }}
                                   className={cn(
-                                    "rounded-xl border px-3 py-2.5 text-sm capitalize transition-all",
+                                    "rounded-xl border px-3 py-2.5 text-sm capitalize transition-all cursor-pointer",
                                     form.preferredWindow === w
                                       ? "border-brass bg-brass/10 text-ink shadow-sm"
                                       : "border-border bg-white hover:border-ink/20 hover:shadow-sm",
@@ -507,7 +606,7 @@ function OrderPageInner() {
                                 >
                                   <RadioGroupItem value={w} className="sr-only" />
                                   {w}
-                                </button>
+                                </div>
                               ))}
                             </RadioGroup>
                           </div>
@@ -646,16 +745,19 @@ function OrderPageInner() {
                           )}
                         </div>
 
-                        {form.signature && form.signatureConsent && (
+                        {form.signature && form.signatureConsent && orderId && (
                           <div className="mt-6 max-w-full overflow-hidden">
                             <StripePaymentSection
+                              orderId={orderId}
                               amount={total}
-                              currency="usd"
                               packageId={form.packageId}
-                              packageName={pkg.name}
-                              email={form.email}
-                              name={`${form.firstName} ${form.lastName}`.trim()}
                             />
+                          </div>
+                        )}
+                        {form.signature && form.signatureConsent && !orderId && (
+                          <div className="mt-6 flex items-center gap-3 rounded-xl border border-border p-5 text-sm text-muted-foreground">
+                            <Loader2 className="h-4 w-4 animate-spin text-brass" />
+                            Preparing your order...
                           </div>
                         )}
                       </>
@@ -794,19 +896,13 @@ function Row({ k, v, muted }: { k: string; v: string; muted?: boolean }) {
 }
 
 function StripePaymentSection({
+  orderId,
   amount,
-  currency,
   packageId,
-  packageName,
-  email,
-  name,
 }: {
+  orderId: string;
   amount: number;
-  currency: string;
   packageId: string;
-  packageName: string;
-  email: string;
-  name: string;
 }) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -819,23 +915,13 @@ function StripePaymentSection({
     fetch("/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        amount,
-        currency,
-        packageId,
-        packageName,
-        customerEmail: email,
-        customerName: name,
-      }),
+      body: JSON.stringify({ orderId }),
     })
       .then((r) => r.json())
       .then((res) => {
         if (!cancelled) {
-          if (res.error) {
-            setError(res.error);
-          } else {
-            setClientSecret(res.clientSecret);
-          }
+          if (res.error) setError(res.error);
+          else setClientSecret(res.clientSecret);
         }
       })
       .catch((err) => {
@@ -844,7 +930,7 @@ function StripePaymentSection({
     return () => {
       cancelled = true;
     };
-  }, [amount, currency, packageId, packageName, email, name]);
+  }, [orderId]);
 
   return (
     <section>
