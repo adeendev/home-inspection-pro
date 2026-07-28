@@ -70,52 +70,31 @@ type FormState = {
 };
 
 const RUSH_FEE = 149;
-const STORAGE_KEY = "order-form-state";
 
 function defaultForm(sp: { package?: "basic" | "premium" | "verified" }): FormState {
   return {
-    firstName: "John",
-    lastName: "Smith",
-    email: "john.smith@example.com",
-    phone: "(512) 555-0198",
-    address: "742 Evergreen Terrace",
-    address2: "Apt 4B",
-    city: "Austin",
-    state: "TX",
-    zip: "78701",
-    yearBuilt: "2005",
-    sqft: "2400",
-    ownershipType: "owner",
-    notes: "Test order — mock data for development.",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    address2: "",
+    city: "",
+    state: "",
+    zip: "",
+    yearBuilt: "",
+    sqft: "",
+    ownershipType: "",
+    notes: "",
     packageId: sp.package ?? "premium",
-    preferredDate: new Date(Date.now() + 86400000 * 3).toISOString().slice(0, 10),
-    preferredWindow: "morning",
+    preferredDate: "",
+    preferredWindow: "either",
     rush: false,
     signature: "",
     signatureConsent: false,
     nameOnCard: "",
     saveCard: false,
   };
-}
-
-function loadPersistedForm(sp: { package?: "basic" | "premium" | "verified" }): FormState {
-  if (typeof window === "undefined") return defaultForm(sp);
-  try {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      const pkgs = ["basic", "premium", "verified"] as const;
-      const pkgId: Package["id"] = pkgs.includes(sp.package as never)
-        ? (sp.package as Package["id"])
-        : pkgs.includes(parsed.packageId as never)
-          ? (parsed.packageId as Package["id"])
-          : "premium";
-      return { ...defaultForm(sp), ...parsed, packageId: pkgId };
-    }
-  } catch {
-    /* ignore */
-  }
-  return defaultForm(sp);
 }
 
 export default function OrderPage() {
@@ -146,21 +125,12 @@ function OrderPageInner() {
   const sp = parsed.data ?? { package: undefined };
 
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<FormState>(() => loadPersistedForm(sp));
+  const [form, setForm] = useState<FormState>(() => defaultForm(sp));
   const [dir, setDir] = useState(1);
   const [orderId, setOrderId] = useState<string | null>(null);
   const [creatingOrder, setCreatingOrder] = useState(false);
   const u = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
-
-  useEffect(() => {
-    try {
-      const { signature: _sig, ...rest } = form;
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(rest));
-    } catch {
-      /* ignore */
-    }
-  }, [form]);
 
   useEffect(() => {
     if (step === 5 && !orderId && !creatingOrder) {
@@ -319,6 +289,7 @@ function OrderPageInner() {
                         <div className="mt-6 grid gap-4 sm:grid-cols-2">
                           <Field label="First name">
                             <Input
+                              placeholder="John"
                               value={form.firstName}
                               onChange={(e) => u("firstName", e.target.value.slice(0, 50))}
                               maxLength={50}
@@ -327,6 +298,7 @@ function OrderPageInner() {
                           </Field>
                           <Field label="Last name">
                             <Input
+                              placeholder="Smith"
                               value={form.lastName}
                               onChange={(e) => u("lastName", e.target.value.slice(0, 50))}
                               maxLength={50}
@@ -336,6 +308,7 @@ function OrderPageInner() {
                           <Field label="Email" className="sm:col-span-2">
                             <Input
                               type="email"
+                              placeholder="john@example.com"
                               value={form.email}
                               onChange={(e) => u("email", e.target.value.slice(0, 100))}
                               maxLength={100}
@@ -376,6 +349,7 @@ function OrderPageInner() {
                         <div className="mt-6 grid gap-4 sm:grid-cols-6">
                           <Field label="Street address" className="sm:col-span-6">
                             <Input
+                              placeholder="742 Evergreen Terrace"
                               value={form.address}
                               onChange={(e) => u("address", e.target.value)}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
@@ -383,6 +357,7 @@ function OrderPageInner() {
                           </Field>
                           <Field label="Unit / Apt (optional)" className="sm:col-span-2">
                             <Input
+                              placeholder="Apt 4B"
                               value={form.address2}
                               onChange={(e) => u("address2", e.target.value)}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
@@ -390,6 +365,7 @@ function OrderPageInner() {
                           </Field>
                           <Field label="City" className="sm:col-span-2">
                             <Input
+                              placeholder="Austin"
                               value={form.city}
                               onChange={(e) => u("city", e.target.value)}
                               className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
@@ -547,6 +523,7 @@ function OrderPageInner() {
                         <div className="mt-6">
                           <Field label="Anything we should know? (optional)">
                             <Textarea
+                              placeholder="Any special instructions for the inspector…"
                               value={form.notes}
                               onChange={(e) => u("notes", e.target.value)}
                               rows={3}
@@ -940,7 +917,7 @@ function StripePaymentSection({
           <Lock className="h-3 w-3" /> Encrypted via Stripe
         </span>
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">All major cards · Apple Pay · Google Pay</p>
+      <p className="mt-1 text-sm text-muted-foreground">All major cards · Apple Pay · Google Pay · Cash App · PayPal</p>
 
       {error && (
         <div className="mt-4 rounded-xl bg-destructive/10 p-4 text-sm text-destructive">
@@ -1038,11 +1015,6 @@ function PaymentForm({ amount, packageId }: { amount: number; packageId: string 
         setError(result.error.message ?? "Payment failed");
         setProcessing(false);
       } else if (result.paymentIntent?.status === "succeeded") {
-        try {
-          localStorage.removeItem("order-form-state");
-        } catch {
-          /* ignore */
-        }
         window.location.href = `/order/success?package=${packageId}&payment_intent=${result.paymentIntent.id}`;
       } else if (result.paymentIntent?.status === "processing") {
         window.location.href = `/order/pending?package=${packageId}`;
