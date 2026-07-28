@@ -917,7 +917,9 @@ function StripePaymentSection({
           <Lock className="h-3 w-3" /> Encrypted via Stripe
         </span>
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">All major cards · Apple Pay · Google Pay · Cash App · PayPal</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        All major cards · Apple Pay · Google Pay · Cash App · PayPal
+      </p>
 
       {error && (
         <div className="mt-4 rounded-xl bg-destructive/10 p-4 text-sm text-destructive">
