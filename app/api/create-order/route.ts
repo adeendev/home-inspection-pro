@@ -43,7 +43,7 @@ export async function POST(req: Request) {
       orderData: JSON.stringify(wizardData),
     });
 
-    return NextResponse.json({ orderId, amountCents });
+    return NextResponse.json({ orderId, accessToken, amountCents });
   } catch (err) {
     console.error("[create-order]", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

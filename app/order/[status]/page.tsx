@@ -32,6 +32,7 @@ export default function StatusPage() {
     if (status === "success") {
       try {
         localStorage.removeItem("order-form-state");
+        localStorage.removeItem("hip-order-draft");
       } catch {
         /* ignore */
       }

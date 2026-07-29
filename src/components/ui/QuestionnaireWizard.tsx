@@ -13,6 +13,7 @@ import {
   Plus,
   Trash2,
   FileText,
+  Save,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,6 +38,9 @@ interface Order {
 
 interface QuestionnaireWizardProps {
   order: Order;
+  /** When provided, the questionnaire is embedded before payment: skip the
+   * post-payment "Order Information" screen and hand control back to the parent. */
+  onCompleted?: () => void;
 }
 
 interface UploadedFile {
@@ -72,7 +76,7 @@ const slideVariants = {
   exit: (d: number) => ({ opacity: 0, x: d > 0 ? -30 : 30 }),
 };
 
-export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps) {
+export default function QuestionnaireWizard({ order, onCompleted }: QuestionnaireWizardProps) {
   // Parse initial wizard data
   const initialWizardData = useMemo(() => {
     try {
@@ -296,48 +300,6 @@ export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps)
   );
 
   const nextStep = async () => {
-    // Validate current step before proceeding
-    if (activeStep === 1) {
-      if (
-        !str(form.fullName).trim() ||
-        !str(form.email).trim() ||
-        !str(form.phone).trim() ||
-        !form.signatureStep1
-      ) {
-        toast.error("Please fill in all required fields and sign.");
-        return;
-      }
-    }
-    if (activeStep === 2) {
-      if (!form.occupantsCount) {
-        toast.error("Please specify the number of occupants.");
-        return;
-      }
-    }
-    if (activeStep === 5) {
-      if (!form.roofAge) {
-        toast.error("Please enter the approximate roof age.");
-        return;
-      }
-    }
-    if (activeStep === 6) {
-      if (!form.hvacHeatingType || !form.hvacCoolingType) {
-        toast.error("Please enter the HVAC type details.");
-        return;
-      }
-    }
-    if (activeStep === 7) {
-      if (!form.plumbingMaterial || !form.waterHeaterAge) {
-        toast.error("Please complete the plumbing material and water heater age fields.");
-        return;
-      }
-    }
-    if (activeStep === 10) {
-      if (!form.sidingMaterial) {
-        toast.error("Please specify the siding material.");
-        return;
-      }
-    }
     if (activeStep === 17) {
       if (!form.certificationAccept || !form.certificationSignature) {
         toast.error("Please accept the certification terms and sign above.");
@@ -358,9 +320,10 @@ export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps)
           }),
         });
         if (!res.ok) throw new Error("Submission failed");
-        setCompleted(true);
         window.scrollTo({ top: 0, behavior: "smooth" });
         toast.success("Questionnaire submitted successfully!");
+        if (onCompleted) onCompleted();
+        else setCompleted(true);
       } catch {
         toast.error("Submission failed. Please try again.");
       } finally {
@@ -430,14 +393,11 @@ export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps)
     toast.success("File removed.");
   };
 
-  const handleStepClick = async (stepId: number) => {
-    // Only allow navigating forward if previous sections are mostly complete
-    if (stepId > activeStep && !completedSections.includes(activeStep)) {
-      toast.error("Please complete the required questions in the current section first.");
-      return;
-    }
+  const handleStepClick = (stepId: number) => {
+    if (stepId === activeStep) return;
     setDirection(stepId > activeStep ? 1 : -1);
     setActiveStep(stepId);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   if (completed) {
@@ -473,12 +433,36 @@ export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps)
           </dl>
         </div>
         <div className="mt-8 flex justify-center gap-3">
-          <Button asChild variant="primary" size="lg" className="rounded-xl">
-            <a href={`/order/status/${order.accessToken}`}>View Order Details</a>
-          </Button>
-          <Button asChild variant="ghost" className="rounded-xl">
-            <a href="/">Return Home</a>
-          </Button>
+          {onCompleted ? (
+            <>
+              <Button
+                type="button"
+                variant="primary"
+                size="lg"
+                className="rounded-xl"
+                onClick={onCompleted}
+              >
+                Continue to payment
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="rounded-xl"
+                onClick={() => setCompleted(false)}
+              >
+                Edit answers
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="primary" size="lg" className="rounded-xl">
+                <a href={`/order/status/${order.accessToken}`}>View Order Details</a>
+              </Button>
+              <Button asChild variant="ghost" className="rounded-xl">
+                <a href="/">Return Home</a>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     );
@@ -512,23 +496,27 @@ export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps)
                 type="button"
                 onClick={() => handleStepClick(s.id)}
                 className={cn(
-                  "flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-xs font-medium transition-all",
+                  "group flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left text-xs font-medium transition-all cursor-pointer",
                   isActive
-                    ? "bg-ink text-cream"
+                    ? "bg-ink text-cream shadow-sm"
                     : isCompleted
                       ? "bg-brass/10 text-ink hover:bg-brass/15"
-                      : "text-muted-foreground hover:bg-secondary/40 hover:text-ink",
+                      : "text-muted-foreground hover:bg-secondary/50 hover:text-ink",
                 )}
               >
-                <span className="truncate pr-2">
-                  {s.id}. {s.label}
+                <span
+                  className={cn(
+                    "grid h-5 w-5 shrink-0 place-items-center rounded-full text-[0.65rem] font-semibold transition-colors",
+                    isActive
+                      ? "bg-cream text-ink"
+                      : isCompleted
+                        ? "bg-brass text-ink"
+                        : "bg-secondary text-muted-foreground group-hover:bg-white",
+                  )}
+                >
+                  {isCompleted && !isActive ? <Check className="h-3 w-3" strokeWidth={3} /> : s.id}
                 </span>
-                {isCompleted && (
-                  <Check
-                    className={cn("h-3 w-3 shrink-0", isActive ? "text-brass" : "text-brass")}
-                    strokeWidth={3}
-                  />
-                )}
+                <span className="truncate">{s.label}</span>
               </button>
             );
           })}
@@ -541,21 +529,26 @@ export default function QuestionnaireWizard({ order }: QuestionnaireWizardProps)
           <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
             <span>Section {activeStep} of 17</span>
             <span>·</span>
-            <span className="text-brass">Progress is autosaved</span>
+            <span className="hidden text-brass sm:inline">Jump to any section anytime</span>
           </div>
-          <button
+          <Button
+            type="button"
+            variant="brass"
+            size="sm"
             onClick={() => handleSave()}
             disabled={saving}
-            className="inline-flex items-center gap-1.5 text-xs text-ink hover:underline disabled:opacity-50"
+            className="rounded-xl"
           >
             {saving ? (
               <>
-                <Loader2 className="h-3 w-3 animate-spin" /> Saving...
+                <Loader2 className="mr-1.5 h-3.5 w-3.5 animate-spin" /> Saving…
               </>
             ) : (
-              "Save progress"
+              <>
+                <Save className="mr-1.5 h-3.5 w-3.5" /> Save
+              </>
             )}
-          </button>
+          </Button>
         </div>
 
         <div className="rounded-b-3xl border border-border bg-white p-6 shadow-sm sm:p-8 md:p-10">
