@@ -286,6 +286,41 @@ function OrderPageInner() {
                         <p className="mt-1 text-sm text-muted-foreground">
                           Where should we send your report?
                         </p>
+
+                        <div className="mt-6 rounded-2xl border border-border bg-gradient-to-br from-white to-secondary/30 p-5 shadow-sm">
+                          <h3 className="font-display text-xs uppercase tracking-wider text-muted-foreground">
+                            Steps to Complete Your Order
+                          </h3>
+                          <div className="mt-4 grid gap-5 sm:grid-cols-2">
+                            <div className="flex items-start gap-3">
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brass/25 font-display text-sm font-semibold text-ink">
+                                1
+                              </span>
+                              <div>
+                                <h4 className="font-display text-base text-ink">
+                                  Complete the Questionnaire
+                                </h4>
+                                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                                  Provide your property details, disclosures, and upload any
+                                  supporting documents.
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-start gap-3">
+                              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brass/25 font-display text-sm font-semibold text-ink">
+                                2
+                              </span>
+                              <div>
+                                <h4 className="font-display text-base text-ink">Submit Payment</h4>
+                                <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+                                  Verify your email and complete secure payment to confirm your
+                                  order.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="mt-6 grid gap-4 sm:grid-cols-2">
                           <Field label="First name">
                             <Input

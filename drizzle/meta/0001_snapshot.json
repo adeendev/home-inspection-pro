@@ -1,6 +1,6 @@
 {
-  "id": "ce8b183c-fdc6-4353-adc1-7c8fffa68c8a",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ffd82271-2f01-4d02-97a5-0cd1cab62ac5",
+  "prevId": "ce8b183c-fdc6-4353-adc1-7c8fffa68c8a",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -113,6 +113,26 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "questionnaire_responses": {
+          "name": "questionnaire_responses",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "questionnaire_progress": {
+          "name": "questionnaire_progress",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "questionnaire_completed": {
+          "name": "questionnaire_completed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
         },
         "created_at": {
           "name": "created_at",

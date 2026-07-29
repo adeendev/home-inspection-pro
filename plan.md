@@ -20,24 +20,28 @@ bun add -d drizzle-kit
 ```ts
 import { pgTable, text, integer, timestamp, boolean, index } from "drizzle-orm/pg-core";
 
-export const orders = pgTable("orders", {
-  id: text("id").primaryKey(), // e.g. nanoid
-  accessToken: text("access_token").notNull().unique(), // for customer status link
-  customerEmail: text("customer_email").notNull(),
-  customerName: text("customer_name").notNull(),
-  packageTier: text("package_tier").notNull(), // 'basic' | 'premium' | 'verified'
-  rushRequested: boolean("rush_requested").notNull().default(false),
-  amountCents: integer("amount_cents").notNull(), // server-derived, never client-trusted
-  status: text("status").notNull().default("pending"), // pending | paid | in_progress | delivered
-  stripePaymentIntentId: text("stripe_payment_intent_id"),
-  reportFileKey: text("report_file_key"), // blob storage key, set when analyst uploads PDF
-  orderData: text("order_data").notNull(), // JSON blob of wizard answers (property address etc.)
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-}, (table) => ({
-  emailIdx: index("orders_email_idx").on(table.customerEmail),
-  statusIdx: index("orders_status_idx").on(table.status),
-}));
+export const orders = pgTable(
+  "orders",
+  {
+    id: text("id").primaryKey(), // e.g. nanoid
+    accessToken: text("access_token").notNull().unique(), // for customer status link
+    customerEmail: text("customer_email").notNull(),
+    customerName: text("customer_name").notNull(),
+    packageTier: text("package_tier").notNull(), // 'basic' | 'premium' | 'verified'
+    rushRequested: boolean("rush_requested").notNull().default(false),
+    amountCents: integer("amount_cents").notNull(), // server-derived, never client-trusted
+    status: text("status").notNull().default("pending"), // pending | paid | in_progress | delivered
+    stripePaymentIntentId: text("stripe_payment_intent_id"),
+    reportFileKey: text("report_file_key"), // blob storage key, set when analyst uploads PDF
+    orderData: text("order_data").notNull(), // JSON blob of wizard answers (property address etc.)
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    emailIdx: index("orders_email_idx").on(table.customerEmail),
+    statusIdx: index("orders_status_idx").on(table.status),
+  }),
+);
 
 export const processedWebhookEvents = pgTable("processed_webhook_events", {
   stripeEventId: text("stripe_event_id").primaryKey(),
@@ -102,7 +106,7 @@ export function calculateAmountCents(tier: PackageTier, rush: boolean): number {
 }
 ```
 
-Both the client-facing price display *and* the server route below import from this one file — no more hardcoding in two places.
+Both the client-facing price display _and_ the server route below import from this one file — no more hardcoding in two places.
 
 ---
 
@@ -165,7 +169,8 @@ export async function POST(req: Request) {
     metadata: { orderId: order.id },
   });
 
-  await db.update(orders)
+  await db
+    .update(orders)
     .set({ stripePaymentIntentId: paymentIntent.id, updatedAt: new Date() })
     .where(eq(orders.id, orderId));
 
@@ -201,7 +206,9 @@ export async function POST(req: Request) {
   }
 
   // Dedup: skip if we've already processed this exact event
-  const [existing] = await db.select().from(processedWebhookEvents)
+  const [existing] = await db
+    .select()
+    .from(processedWebhookEvents)
     .where(eq(processedWebhookEvents.stripeEventId, event.id));
   if (existing) {
     return NextResponse.json({ received: true, deduped: true });
@@ -213,7 +220,8 @@ export async function POST(req: Request) {
 
     const [order] = await db.select().from(orders).where(eq(orders.id, orderId));
     if (order && order.status === "pending") {
-      await db.update(orders)
+      await db
+        .update(orders)
         .set({ status: "paid", updatedAt: new Date() })
         .where(eq(orders.id, orderId));
 
@@ -282,11 +290,12 @@ export async function POST(req: Request) {
   const ip = req.headers.get("x-forwarded-for") ?? "unknown";
   const windowStart = new Date(Date.now() - WINDOW_MINUTES * 60 * 1000);
 
-  const recentAttempts = await db.select().from(adminLoginAttempts)
-    .where(and(
-      eq(adminLoginAttempts.ipAddress, ip),
-      gte(adminLoginAttempts.attemptedAt, windowStart)
-    ));
+  const recentAttempts = await db
+    .select()
+    .from(adminLoginAttempts)
+    .where(
+      and(eq(adminLoginAttempts.ipAddress, ip), gte(adminLoginAttempts.attemptedAt, windowStart)),
+    );
 
   if (recentAttempts.length >= MAX_ATTEMPTS) {
     return NextResponse.json({ error: "Too many attempts, try again later" }, { status: 429 });
@@ -365,8 +374,13 @@ export default async function AdminOrdersPage() {
           {allOrders.map((order) => (
             <tr key={order.id} className="border-b">
               <td className="py-2 font-mono text-xs">{order.id}</td>
-              <td>{order.customerName} ({order.customerEmail})</td>
-              <td className="capitalize">{order.packageTier}{order.rushRequested ? " + rush" : ""}</td>
+              <td>
+                {order.customerName} ({order.customerEmail})
+              </td>
+              <td className="capitalize">
+                {order.packageTier}
+                {order.rushRequested ? " + rush" : ""}
+              </td>
               <td>${(order.amountCents / 100).toFixed(2)}</td>
               <td className="capitalize">{order.status}</td>
               <td>{order.createdAt.toLocaleDateString()}</td>
@@ -434,9 +448,13 @@ export default async function OrderStatusPage({ params }: { params: { token: str
       <h1 className="text-xl font-semibold mb-2">Order {order.id}</h1>
       <p className="capitalize mb-4">Status: {order.status}</p>
       {downloadUrl ? (
-        <a href={downloadUrl} className="underline">Download your report</a>
+        <a href={downloadUrl} className="underline">
+          Download your report
+        </a>
       ) : (
-        <p className="text-sm text-gray-500">Your report isn't ready yet — we'll email you when it is.</p>
+        <p className="text-sm text-gray-500">
+          Your report isn't ready yet — we'll email you when it is.
+        </p>
       )}
     </div>
   );

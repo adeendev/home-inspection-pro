@@ -3,6 +3,10 @@ import { orders } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import { getSignedDownloadUrl } from "@/lib/storage";
+import { SiteHeader } from "@/components/site/Header";
+import { SiteFooter } from "@/components/site/Footer";
+import QuestionnaireWizard from "@/components/ui/QuestionnaireWizard";
+import { CheckCircle2, Clock, FileDown, AlertCircle } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -14,47 +18,79 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
   const downloadUrl = order.reportFileKey ? await getSignedDownloadUrl(order.reportFileKey) : null;
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-8">
-      <div className="w-full max-w-lg p-8 border rounded-lg">
-        <h1 className="text-xl font-semibold mb-2 font-[family-name:var(--font-display)]">
-          Order {order.id}
-        </h1>
-        <p className="text-sm text-muted-foreground mb-1">
-          {order.customerName} — {order.customerEmail}
-        </p>
-        <p className="capitalize mb-4">
-          Status:{" "}
-          <span
-            className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${
-              order.status === "paid"
-                ? "bg-green-100 text-green-700"
-                : order.status === "pending"
-                  ? "bg-yellow-100 text-yellow-700"
-                  : order.status === "delivered"
-                    ? "bg-blue-100 text-blue-700"
-                    : "bg-gray-100 text-gray-700"
-            }`}
-          >
-            {order.status}
-          </span>
-        </p>
-        <p className="text-sm text-muted-foreground mb-4 capitalize">
-          Package: {order.packageTier}
-          {order.rushRequested ? " (rush)" : ""}
-        </p>
-        {downloadUrl ? (
-          <a
-            href={downloadUrl}
-            className="inline-block px-4 py-2 bg-foreground text-background rounded-md text-sm font-medium"
-          >
-            Download your report
-          </a>
-        ) : (
-          <p className="text-sm text-muted-foreground">
-            Your report isn&apos;t ready yet — we&apos;ll email you when it is.
-          </p>
-        )}
+    <div className="min-h-screen bg-gradient-to-b from-white to-secondary/30">
+      <SiteHeader />
+      <div className="container-x pt-24 pb-32 md:pt-36 md:pb-40">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-8">
+            <h1 className="font-display text-3xl text-ink sm:text-4xl">Order Status</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Track your property report details and submit verification disclosures.
+            </p>
+          </div>
+
+          {(order.status === "paid" || order.status === "in_progress") && (
+            <div className="mt-8">
+              <QuestionnaireWizard order={order} />
+            </div>
+          )}
+
+          {order.status === "delivered" && (
+            <div className="mx-auto max-w-2xl rounded-3xl border border-border bg-card p-8 text-center shadow-elegant md:p-14">
+              <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-blue-500/10">
+                <CheckCircle2 className="h-10 w-10 text-blue-500" strokeWidth={1.5} />
+              </div>
+              <h2 className="mt-6 font-display text-3xl text-ink">Your report is ready!</h2>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                Your custom property report has been prepared by our analysts. You can download the
+                PDF below.
+              </p>
+              {downloadUrl && (
+                <div className="mt-8">
+                  <a
+                    href={downloadUrl}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-ink text-cream hover:bg-ink-soft transition-all rounded-xl font-medium shadow-md"
+                  >
+                    <FileDown className="h-5 w-5" /> Download PDF Report
+                  </a>
+                </div>
+              )}
+            </div>
+          )}
+
+          {order.status === "pending" && (
+            <div className="mx-auto max-w-2xl rounded-3xl border border-border bg-card p-8 text-center shadow-elegant md:p-14">
+              <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-brass/10">
+                <Clock className="h-10 w-10 text-brass" strokeWidth={1.5} />
+              </div>
+              <h2 className="mt-6 font-display text-3xl text-brass">Payment Processing</h2>
+              <p className="mt-3 text-muted-foreground leading-relaxed">
+                We are waiting for payment confirmation from Stripe. As soon as it clears, your
+                property questionnaire will become available here.
+              </p>
+            </div>
+          )}
+
+          {order.status !== "pending" &&
+            order.status !== "paid" &&
+            order.status !== "in_progress" &&
+            order.status !== "delivered" && (
+              <div className="mx-auto max-w-2xl rounded-3xl border border-border bg-card p-8 text-center shadow-elegant md:p-14">
+                <div className="mx-auto grid h-20 w-20 place-items-center rounded-full bg-destructive/10">
+                  <AlertCircle className="h-10 w-10 text-destructive" strokeWidth={1.5} />
+                </div>
+                <h2 className="mt-6 font-display text-3xl text-destructive">
+                  Order Status: {order.status}
+                </h2>
+                <p className="mt-3 text-muted-foreground leading-relaxed">
+                  There is an issue or update on this order. Please reach out to customer support at
+                  support@accuratehomereport.com.
+                </p>
+              </div>
+            )}
+        </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }
