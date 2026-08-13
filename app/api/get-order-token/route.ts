@@ -1,7 +1,9 @@
+import Stripe from "stripe";
 import { db } from "@/lib/db";
 import { orders } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
+import { getServerConfig } from "@/lib/config.server";
 
 export async function GET(req: Request) {
   try {
@@ -10,6 +12,20 @@ export async function GET(req: Request) {
 
     if (!paymentIntentId) {
       return NextResponse.json({ error: "Missing payment_intent" }, { status: 400 });
+    }
+
+    const config = getServerConfig();
+    if (!config.stripeSecretKey) {
+      return NextResponse.json({ error: "Stripe not configured" }, { status: 500 });
+    }
+
+    const stripe = new Stripe(config.stripeSecretKey, {
+      apiVersion: "2026-05-27.dahlia",
+    });
+
+    const intent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    if (intent.status !== "succeeded" && intent.status !== "processing") {
+      return NextResponse.json({ error: "Payment not confirmed" }, { status: 403 });
     }
 
     const [order] = await db

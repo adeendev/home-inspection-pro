@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect, useCallback } from "react";
+import { useState, useMemo, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
@@ -98,7 +98,10 @@ export default function QuestionnaireWizard({ order, onCompleted }: Questionnair
     return {};
   }, [order.questionnaireResponses]);
 
-  const [activeStep, setActiveStep] = useState(1);
+  const [activeStep, setActiveStep] = useState(() => {
+    const saved = order.questionnaireProgress || 0;
+    return saved > 0 ? Math.min(SECTIONS.length, saved + 1) : 1;
+  });
   const [direction, setDirection] = useState(1);
   const [saving, setSaving] = useState(false);
   const [completed, setCompleted] = useState(!!order.questionnaireCompleted);
@@ -299,6 +302,20 @@ export default function QuestionnaireWizard({ order, onCompleted }: Questionnair
     [form, order.accessToken, completedSections],
   );
 
+  // Debounced autosave: persists in-progress edits to the server so a reload
+  // (or closed tab) never loses work typed since the last "Next" click.
+  const skipNextAutosave = useRef(true);
+  useEffect(() => {
+    if (skipNextAutosave.current) {
+      skipNextAutosave.current = false;
+      return;
+    }
+    const timer = setTimeout(() => {
+      handleSave(true);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [form]);
+
   const nextStep = async () => {
     if (activeStep === 17) {
       if (!form.certificationAccept || !form.certificationSignature) {
@@ -359,6 +376,7 @@ export default function QuestionnaireWizard({ order, onCompleted }: Questionnair
     const formData = new FormData();
     formData.append("file", file);
     formData.append("category", str(form.uploadCategory) || "other");
+    formData.append("token", order.accessToken);
 
     try {
       const res = await fetch("/api/upload-document", {

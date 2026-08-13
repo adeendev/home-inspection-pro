@@ -1,36 +1,37 @@
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { db } from "@/lib/db";
-import { orders } from "@/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { orders, paymentIntentAttempts } from "@/lib/db/schema";
+import { eq, and, gte } from "drizzle-orm";
+import { nanoid } from "nanoid";
 import { getServerConfig } from "@/lib/config.server";
 
-const RATE_LIMIT = new Map<string, { count: number; resetAt: number }>();
-
-function checkRateLimit(ip: string, limit = 10, windowMs = 300_000) {
-  const now = Date.now();
-  const entry = RATE_LIMIT.get(ip);
-
-  if (!entry || now > entry.resetAt) {
-    RATE_LIMIT.set(ip, { count: 1, resetAt: now + windowMs });
-    return true;
-  }
-
-  if (entry.count >= limit) return false;
-  entry.count++;
-  return true;
-}
+const RATE_LIMIT = 10;
+const RATE_WINDOW_MINUTES = 5;
 
 export async function POST(request: Request) {
   const ip =
     request.headers.get("x-forwarded-for") ?? request.headers.get("x-real-ip") ?? "unknown";
 
-  if (!checkRateLimit(ip)) {
+  const windowStart = new Date(Date.now() - RATE_WINDOW_MINUTES * 60 * 1000);
+  const recentAttempts = await db
+    .select()
+    .from(paymentIntentAttempts)
+    .where(
+      and(
+        eq(paymentIntentAttempts.ipAddress, ip),
+        gte(paymentIntentAttempts.attemptedAt, windowStart),
+      ),
+    );
+
+  if (recentAttempts.length >= RATE_LIMIT) {
     return NextResponse.json(
       { error: "Too many requests. Please try again later." },
       { status: 429 },
     );
   }
+
+  await db.insert(paymentIntentAttempts).values({ id: nanoid(), ipAddress: ip });
 
   try {
     const { orderId } = await request.json();

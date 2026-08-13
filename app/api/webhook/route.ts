@@ -59,6 +59,71 @@ export async function POST(request: Request) {
     }
   }
 
+  if (event.type === "payment_intent.payment_failed") {
+    const intent = event.data.object as Stripe.PaymentIntent;
+    const orderId = intent.metadata.orderId;
+
+    if (orderId) {
+      const [order] = await db.select().from(orders).where(eq(orders.id, orderId));
+      if (order && order.status === "pending") {
+        await db
+          .update(orders)
+          .set({ status: "payment_failed", updatedAt: new Date() })
+          .where(eq(orders.id, orderId));
+      }
+      console.error(
+        `[webhook] Payment failed for order ${orderId}:`,
+        intent.last_payment_error?.message,
+      );
+    }
+  }
+
+  if (event.type === "charge.dispute.created") {
+    const dispute = event.data.object as Stripe.Dispute;
+    const paymentIntentId =
+      typeof dispute.payment_intent === "string"
+        ? dispute.payment_intent
+        : dispute.payment_intent?.id;
+
+    if (paymentIntentId) {
+      const [order] = await db
+        .select()
+        .from(orders)
+        .where(eq(orders.stripePaymentIntentId, paymentIntentId));
+      if (order) {
+        await db
+          .update(orders)
+          .set({ status: "disputed", updatedAt: new Date() })
+          .where(eq(orders.id, order.id));
+      }
+      console.error(
+        `[webhook] Dispute created for payment intent ${paymentIntentId} (order ${order?.id ?? "unknown"}), amount: ${dispute.amount}, reason: ${dispute.reason}`,
+      );
+    }
+  }
+
+  if (event.type === "charge.refunded") {
+    const charge = event.data.object as Stripe.Charge;
+    const paymentIntentId =
+      typeof charge.payment_intent === "string" ? charge.payment_intent : charge.payment_intent?.id;
+
+    if (paymentIntentId) {
+      const [order] = await db
+        .select()
+        .from(orders)
+        .where(eq(orders.stripePaymentIntentId, paymentIntentId));
+      if (order) {
+        await db
+          .update(orders)
+          .set({ status: "refunded", updatedAt: new Date() })
+          .where(eq(orders.id, order.id));
+      }
+      console.error(
+        `[webhook] Refund issued for payment intent ${paymentIntentId} (order ${order?.id ?? "unknown"}), amount refunded: ${charge.amount_refunded}`,
+      );
+    }
+  }
+
   await db.insert(processedWebhookEvents).values({ stripeEventId: event.id });
 
   return new NextResponse("OK", { status: 200 });

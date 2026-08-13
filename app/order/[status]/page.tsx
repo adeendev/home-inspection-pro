@@ -132,7 +132,10 @@ export default function StatusPage() {
               </div>
 
               {paymentIntent && (
-                <p className="mt-6 text-xs text-muted-foreground">
+                <p
+                  className="mt-6 text-xs text-muted-foreground select-none"
+                  onContextMenu={(e) => e.preventDefault()}
+                >
                   Payment ID:{" "}
                   <button
                     type="button"
@@ -146,6 +149,16 @@ export default function StatusPage() {
                     <Copy className="h-3 w-3" />
                   </button>
                 </p>
+              )}
+
+              {accessToken && (
+                <div className="mt-4">
+                  <Button asChild variant="ghost" size="sm">
+                    <a href={`/api/receipt?token=${encodeURIComponent(accessToken)}`}>
+                      <FileDown className="mr-2 h-4 w-4" /> Download Receipt (PDF)
+                    </a>
+                  </Button>
+                </div>
               )}
             </>
           )}

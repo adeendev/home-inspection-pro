@@ -31,6 +31,14 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
 
           {(order.status === "paid" || order.status === "in_progress") && (
             <div className="mt-8">
+              <div className="mb-6 flex justify-end">
+                <a
+                  href={`/api/receipt?token=${encodeURIComponent(order.accessToken)}`}
+                  className="inline-flex items-center gap-2 rounded-lg border border-border px-4 py-2 text-sm font-medium text-ink transition hover:bg-secondary/50"
+                >
+                  <FileDown className="h-4 w-4" /> Download Receipt (PDF)
+                </a>
+              </div>
               <QuestionnaireWizard order={order} />
             </div>
           )}
@@ -45,16 +53,22 @@ export default async function OrderStatusPage({ params }: { params: Promise<{ to
                 Your custom property report has been prepared by our analysts. You can download the
                 PDF below.
               </p>
-              {downloadUrl && (
-                <div className="mt-8">
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                {downloadUrl && (
                   <a
                     href={downloadUrl}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-ink text-cream hover:bg-ink-soft transition-all rounded-xl font-medium shadow-md"
                   >
                     <FileDown className="h-5 w-5" /> Download PDF Report
                   </a>
-                </div>
-              )}
+                )}
+                <a
+                  href={`/api/receipt?token=${encodeURIComponent(order.accessToken)}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-border px-6 py-3 text-sm font-medium text-ink transition hover:bg-secondary/50"
+                >
+                  <FileDown className="h-5 w-5" /> Download Receipt
+                </a>
+              </div>
             </div>
           )}
 

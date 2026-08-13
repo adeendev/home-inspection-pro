@@ -37,3 +37,15 @@ export const adminLoginAttempts = pgTable("admin_login_attempts", {
   attemptedAt: timestamp("attempted_at").notNull().defaultNow(),
   succeeded: boolean("succeeded").notNull(),
 });
+
+export const paymentIntentAttempts = pgTable(
+  "payment_intent_attempts",
+  {
+    id: text("id").primaryKey(),
+    ipAddress: text("ip_address").notNull(),
+    attemptedAt: timestamp("attempted_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    ipIdx: index("payment_intent_attempts_ip_idx").on(table.ipAddress, table.attemptedAt),
+  }),
+);
