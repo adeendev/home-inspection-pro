@@ -51,9 +51,9 @@ export default function StripeTestPage() {
       <div className="mx-auto max-w-xl">
         <h1 className="mb-2 text-3xl font-semibold">Stripe Payment Test</h1>
         <p className="mb-8 text-sm text-muted-foreground">
-          Click below to spin up a test order and load the real Stripe payment form. Use test
-          card <code className="bg-muted px-1.5 py-0.5 rounded">4242 4242 4242 4242</code>, any
-          future expiry, any CVC.
+          Click below to spin up a test order and load the real Stripe payment form. Use test card{" "}
+          <code className="bg-muted px-1.5 py-0.5 rounded">4242 4242 4242 4242</code>, any future
+          expiry, any CVC.
         </p>
 
         {!orderId && (
