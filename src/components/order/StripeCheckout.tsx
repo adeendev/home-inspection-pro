@@ -52,7 +52,7 @@ export function StripePaymentSection({
         </span>
       </div>
       <p className="mt-1 text-sm text-muted-foreground">
-        All major cards · Apple Pay · Google Pay · Cash App
+        All major cards · Apple Pay · Google Pay
       </p>
 
       {error && (

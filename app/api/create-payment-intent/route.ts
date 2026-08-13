@@ -60,7 +60,7 @@ export async function POST(request: Request) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: order.amountCents,
       currency: "usd",
-      payment_method_types: ["card", "cashapp"],
+      automatic_payment_methods: { enabled: true },
       metadata: { orderId: order.id },
     });
 
