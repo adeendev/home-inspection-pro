@@ -118,6 +118,64 @@ function OrderPageInner() {
   const u = <K extends keyof FormState>(k: K, v: FormState[K]) =>
     setForm((f) => ({ ...f, [k]: v }));
 
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [otpSending, setOtpSending] = useState(false);
+  const [otpVerifying, setOtpVerifying] = useState(false);
+  const [otpError, setOtpError] = useState<string | null>(null);
+  const [verifiedEmail, setVerifiedEmail] = useState<string | null>(null);
+
+  const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email);
+  const emailVerified = verifiedEmail === form.email;
+
+  const sendOtp = async () => {
+    setOtpError(null);
+    setOtpSending(true);
+    try {
+      const res = await fetch("/api/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setOtpError(data.error || "Failed to send verification code");
+        return;
+      }
+      setOtpSent(true);
+      toast.success("Verification code sent — check your email.");
+    } catch {
+      setOtpError("Failed to send verification code");
+    } finally {
+      setOtpSending(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    setOtpError(null);
+    setOtpVerifying(true);
+    try {
+      const res = await fetch("/api/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: form.email, code: otpCode }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setOtpError(data.error || "Incorrect code");
+        return;
+      }
+      setVerifiedEmail(form.email);
+      setOtpSent(false);
+      setOtpCode("");
+      toast.success("Email verified");
+    } catch {
+      setOtpError("Failed to verify code");
+    } finally {
+      setOtpVerifying(false);
+    }
+  };
+
   const pkg = useMemo(() => PACKAGES.find((p) => p.id === form.packageId)!, [form.packageId]);
   const subtotal = pkg.price;
   const rush = form.rush ? RUSH_FEE : 0;
@@ -129,6 +187,7 @@ function OrderPageInner() {
         form.firstName.trim().length >= 1 &&
         form.lastName.trim().length >= 1 &&
         /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) &&
+        verifiedEmail === form.email &&
         /^\+?[\d\s\-().]{7,15}$/.test(form.phone)
       );
     if (s === 2)
@@ -193,6 +252,10 @@ function OrderPageInner() {
   const next = () => {
     if (step === 4) {
       submitBasicInfo();
+      return;
+    }
+    if (step === 1 && emailValid && verifiedEmail !== form.email) {
+      toast.error("Please verify your email before continuing.");
       return;
     }
     if (!valid(step)) {
@@ -306,17 +369,67 @@ function OrderPageInner() {
                           />
                         </Field>
                         <Field label="Email" className="sm:col-span-2">
-                          <Input
-                            type="email"
-                            placeholder="john@example.com"
-                            value={form.email}
-                            onChange={(e) => u("email", e.target.value.slice(0, 100))}
-                            maxLength={100}
-                            className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
-                          />
-                          {form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email) && (
+                          <div className="flex gap-2">
+                            <Input
+                              type="email"
+                              placeholder="john@example.com"
+                              value={form.email}
+                              onChange={(e) => {
+                                u("email", e.target.value.slice(0, 100));
+                                setOtpSent(false);
+                                setOtpCode("");
+                                setOtpError(null);
+                              }}
+                              maxLength={100}
+                              disabled={emailVerified}
+                              className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink disabled:opacity-70"
+                            />
+                            {emailVerified ? (
+                              <span className="flex h-11 shrink-0 items-center gap-1.5 rounded-xl bg-green-500/10 px-3 text-sm font-medium text-green-700">
+                                <Check className="h-4 w-4" strokeWidth={3} /> Verified
+                              </span>
+                            ) : (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                className="h-11 shrink-0 rounded-xl"
+                                disabled={!emailValid || otpSending}
+                                onClick={sendOtp}
+                              >
+                                {otpSending ? "Sending…" : otpSent ? "Resend code" : "Send code"}
+                              </Button>
+                            )}
+                          </div>
+                          {form.email && !emailValid && (
                             <p className="mt-1 text-xs text-destructive">Enter a valid email</p>
                           )}
+
+                          {otpSent && !emailVerified && (
+                            <div className="mt-3 flex items-end gap-2">
+                              <Field label="Verification code" className="flex-1">
+                                <Input
+                                  inputMode="numeric"
+                                  placeholder="6-digit code"
+                                  value={otpCode}
+                                  onChange={(e) =>
+                                    setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))
+                                  }
+                                  maxLength={6}
+                                  className="h-11 rounded-xl border-border bg-white focus-visible:ring-ink"
+                                />
+                              </Field>
+                              <Button
+                                type="button"
+                                variant="primary"
+                                className="h-11 shrink-0 rounded-xl"
+                                disabled={otpCode.length !== 6 || otpVerifying}
+                                onClick={verifyOtp}
+                              >
+                                {otpVerifying ? "Verifying…" : "Verify"}
+                              </Button>
+                            </div>
+                          )}
+                          {otpError && <p className="mt-1 text-xs text-destructive">{otpError}</p>}
                         </Field>
                         <Field label="Phone" className="sm:col-span-2">
                           <Input

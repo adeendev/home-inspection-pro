@@ -49,3 +49,19 @@ export const paymentIntentAttempts = pgTable(
     ipIdx: index("payment_intent_attempts_ip_idx").on(table.ipAddress, table.attemptedAt),
   }),
 );
+
+export const emailOtps = pgTable(
+  "email_otps",
+  {
+    id: text("id").primaryKey(),
+    email: text("email").notNull(),
+    codeHash: text("code_hash").notNull(),
+    attempts: integer("attempts").notNull().default(0),
+    verified: boolean("verified").notNull().default(false),
+    expiresAt: timestamp("expires_at").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+  },
+  (table) => ({
+    emailIdx: index("email_otps_email_idx").on(table.email, table.createdAt),
+  }),
+);
