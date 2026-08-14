@@ -20,8 +20,8 @@ export const PACKAGES: Package[] = [
   {
     id: "basic",
     name: "Basic",
-    price: 399,
-    priceLabel: "$399",
+    price: 279,
+    priceLabel: "$279",
     delivery: "48–72 Hours",
     blurb:
       "The essentials—public records, ownership, and your verified disclosures in one polished PDF.",

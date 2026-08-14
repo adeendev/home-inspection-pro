@@ -137,7 +137,7 @@ export default function StripeTestPage() {
 
         {orderId && (
           <div className="mt-8 rounded-2xl border p-6">
-            <StripePaymentSection orderId={orderId} amount={399} packageId="basic" />
+            <StripePaymentSection orderId={orderId} amount={279} packageId="basic" />
           </div>
         )}
       </div>

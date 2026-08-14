@@ -1,5 +1,5 @@
 export const PACKAGE_PRICES_CENTS = {
-  basic: 39900,
+  basic: 27900,
   premium: 89900,
   verified: 250000,
 } as const;

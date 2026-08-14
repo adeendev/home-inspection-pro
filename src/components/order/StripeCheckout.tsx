@@ -137,10 +137,24 @@ function PaymentForm({ amount, packageId }: { amount: number; packageId: string 
     setError(null);
 
     try {
+      const { error: submitError } = await elements.submit();
+      if (submitError) {
+        setError(submitError.message ?? "Please check your payment details and try again.");
+        setProcessing(false);
+        return;
+      }
+
       const result = await stripe.confirmPayment({
         elements,
         confirmParams: {
           return_url: `${window.location.origin}/order/success?package=${packageId}`,
+          payment_method_data: {
+            billing_details: {
+              address: {
+                country: "US",
+              },
+            },
+          },
         },
         redirect: "if_required",
       });
