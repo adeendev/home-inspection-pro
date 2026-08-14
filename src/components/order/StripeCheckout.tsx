@@ -164,7 +164,20 @@ function PaymentForm({ amount, packageId }: { amount: number; packageId: string 
   return (
     <form onSubmit={handleSubmit}>
       <div className="mt-6">
-        <PaymentElement />
+        <PaymentElement
+          options={{
+            defaultValues: {
+              billingDetails: {
+                address: { country: "US" },
+              },
+            },
+            fields: {
+              billingDetails: {
+                address: { country: "never" },
+              },
+            },
+          }}
+        />
       </div>
 
       {error && (

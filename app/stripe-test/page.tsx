@@ -8,6 +8,35 @@ export default function StripeTestPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  const [testEmail, setTestEmail] = useState("");
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailResult, setEmailResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  async function sendTestEmail() {
+    setEmailSending(true);
+    setEmailResult(null);
+
+    try {
+      const res = await fetch("/api/test-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: testEmail }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setEmailResult({ ok: false, message: data.error ?? "Failed to send test email" });
+        return;
+      }
+
+      setEmailResult({ ok: true, message: `Test email sent to ${testEmail}` });
+    } catch (err) {
+      setEmailResult({ ok: false, message: (err as Error).message });
+    } finally {
+      setEmailSending(false);
+    }
+  }
+
   async function startTest() {
     setLoading(true);
     setError(null);
@@ -71,6 +100,40 @@ export default function StripeTestPage() {
             {error}
           </div>
         )}
+
+        <div className="mt-8 rounded-2xl border p-6">
+          <h2 className="mb-1 text-lg font-semibold">Test Email Delivery</h2>
+          <p className="mb-4 text-sm text-muted-foreground">
+            Enter your email and send a test message to confirm Resend is working.
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <input
+              type="email"
+              value={testEmail}
+              onChange={(e) => setTestEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="min-w-[240px] flex-1 rounded-md border px-3 py-2 text-sm"
+            />
+            <button
+              onClick={sendTestEmail}
+              disabled={emailSending || !testEmail}
+              className="rounded-md bg-foreground px-4 py-2 text-sm font-medium text-background disabled:opacity-50"
+            >
+              {emailSending ? "Sending…" : "Send Test Email"}
+            </button>
+          </div>
+          {emailResult && (
+            <div
+              className={`mt-4 rounded-md p-3 text-sm ${
+                emailResult.ok
+                  ? "bg-green-500/10 text-green-700"
+                  : "bg-destructive/10 text-destructive"
+              }`}
+            >
+              {emailResult.message}
+            </div>
+          )}
+        </div>
 
         {orderId && (
           <div className="mt-8 rounded-2xl border p-6">
