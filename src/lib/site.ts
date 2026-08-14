@@ -1,7 +1,6 @@
 export const SITE = {
   name: "Accurate Home Report",
   tagline: "Homeowner-Verified Property Reports",
-  phone: "(800) 555-0142",
   email: "hello@accuratehomereport.com",
   address: "Nationwide service · Verified visits in select metros",
 };

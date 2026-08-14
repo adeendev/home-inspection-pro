@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { Mail, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,21 +61,6 @@ export function Contact() {
             package scheduling, please mention your metro area.
           </p>
           <ul className="mt-8 space-y-4 text-sm">
-            <motion.li
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: 0.1 }}
-              className="flex items-start gap-3"
-            >
-              <span className="grid h-10 w-10 place-items-center rounded-lg bg-ink/5 text-ink">
-                <Phone className="h-4 w-4" />
-              </span>
-              <div>
-                <p className="text-muted-foreground">Phone</p>
-                <p className="text-ink">{SITE.phone}</p>
-              </div>
-            </motion.li>
             <motion.li
               initial={{ opacity: 0, y: 15 }}
               whileInView={{ opacity: 1, y: 0 }}

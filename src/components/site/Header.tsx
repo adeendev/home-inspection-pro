@@ -147,7 +147,6 @@ export function SiteHeader() {
               Order Report
             </Link>
           </Button>
-          <p className="mt-4 text-center text-xs text-muted-foreground">(800) 555-0142</p>
         </div>
       </div>
     </header>

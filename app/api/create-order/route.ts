@@ -4,6 +4,7 @@ import { calculateAmountCents, type PackageTier } from "@/lib/pricing";
 import { nanoid } from "nanoid";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { sendSupportNewOrderEmail } from "@/lib/email";
 
 const CreateOrderSchema = z.object({
   packageTier: z.enum(["basic", "premium", "verified"]),
@@ -42,6 +43,20 @@ export async function POST(req: Request) {
       status: "pending",
       orderData: JSON.stringify(wizardData),
     });
+
+    try {
+      await sendSupportNewOrderEmail({
+        id: orderId,
+        customerName,
+        customerEmail,
+        packageTier,
+        rushRequested,
+        amountCents,
+        wizardData,
+      });
+    } catch (emailErr) {
+      console.error("[create-order] Failed to send support notification:", emailErr);
+    }
 
     return NextResponse.json({ orderId, accessToken, amountCents });
   } catch (err) {

@@ -38,7 +38,6 @@ const jsonLd = {
       "@type": "Organization",
       name: SITE.name,
       email: SITE.email,
-      telephone: SITE.phone,
     },
     {
       "@type": "Service",

@@ -5,6 +5,7 @@ import { orders, processedWebhookEvents } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { getServerConfig } from "@/lib/config.server";
 import { sendOrderConfirmationEmail } from "@/lib/email";
+import { generateReceiptPdf } from "@/lib/receipt";
 
 export async function POST(request: Request) {
   const config = getServerConfig();
@@ -45,13 +46,20 @@ export async function POST(request: Request) {
     if (orderId) {
       const [order] = await db.select().from(orders).where(eq(orders.id, orderId));
       if (order && order.status === "pending") {
+        const paidAt = new Date();
         await db
           .update(orders)
-          .set({ status: "paid", updatedAt: new Date() })
+          .set({ status: "paid", updatedAt: paidAt })
           .where(eq(orders.id, orderId));
 
         try {
-          await sendOrderConfirmationEmail(order.customerEmail, order.accessToken, order.id);
+          const pdfBytes = await generateReceiptPdf({ ...order, updatedAt: paidAt });
+          await sendOrderConfirmationEmail(
+            order.customerEmail,
+            order.accessToken,
+            order.id,
+            pdfBytes,
+          );
         } catch (emailErr) {
           console.error("[webhook] Failed to send confirmation email:", emailErr);
         }

@@ -3,6 +3,7 @@ import { orders } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { sendSupportQuestionnaireCompletedEmail } from "@/lib/email";
 
 const SaveQuestionnaireSchema = z.object({
   token: z.string().min(1),
@@ -31,6 +32,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
+    const justCompleted = completed && !order.questionnaireCompleted;
+
     // Update order with questionnaire responses, progress and completion status
     await db
       .update(orders)
@@ -41,6 +44,22 @@ export async function POST(req: Request) {
         updatedAt: new Date(),
       })
       .where(eq(orders.accessToken, token));
+
+    if (justCompleted) {
+      try {
+        await sendSupportQuestionnaireCompletedEmail(
+          {
+            id: order.id,
+            customerName: order.customerName,
+            customerEmail: order.customerEmail,
+            accessToken: order.accessToken,
+          },
+          responses,
+        );
+      } catch (emailErr) {
+        console.error("[save-questionnaire] Failed to send support notification:", emailErr);
+      }
+    }
 
     return NextResponse.json({ success: true });
   } catch (err) {
